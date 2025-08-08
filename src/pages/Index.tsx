@@ -3,6 +3,7 @@ import { useState } from "react";
 import MapView from "../components/MapView";
 import LiveFeed from "../components/LiveFeed";
 import StatusHeader from "../components/StatusHeader";
+import { DataSourceIndicator } from "../components/DataSourceIndicator";
 import { useCallRecords } from "../hooks/useCallRecords";
 import { useRemediationEvents } from "../hooks/useRemediationEvents";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -48,7 +49,10 @@ const Index = () => {
       </div>
       
       <div className="relative z-10">
-        <StatusHeader towers={towers} avgRecoveryTime={avgRecoveryTime} />
+        <div className="flex justify-between items-center px-4 py-2">
+          <StatusHeader towers={towers} avgRecoveryTime={avgRecoveryTime} />
+          <DataSourceIndicator />
+        </div>
         
         <main className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
