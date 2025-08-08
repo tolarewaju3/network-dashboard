@@ -22,7 +22,7 @@ const defaultConfig: DbConfig = {
   supabaseUrl: '',
   supabaseAnonKey: '',
   // Towers JSON defaults
-  useTowersJson: false,
+  useTowersJson: true,
   towersJsonUrl: '',
   towersJsonPollMs: 15000,
 };
