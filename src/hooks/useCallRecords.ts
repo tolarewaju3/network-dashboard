@@ -25,7 +25,11 @@ export function useCallRecords(limit: number = 100) {
   const towersQuery = useQuery({
     queryKey: ['towers'],
     queryFn: deriveTowersFromCalls,
-    refetchInterval: dbConfig.useSupabase ? false : 10000, // Only poll if not using Supabase
+    refetchInterval: dbConfig.useSupabase
+      ? false
+      : dbConfig.useTowersJson
+        ? (dbConfig.towersJsonPollMs || 15000)
+        : 10000, // Poll JSON at configured interval, otherwise default
   });
   
   // Get average recovery time

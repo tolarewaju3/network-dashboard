@@ -11,8 +11,34 @@ const isSupabaseEnabled = dbConfig.useSupabase && dbConfig.supabaseUrl && dbConf
 const isBrowser = typeof window !== 'undefined';
 const shouldUseMock = (isBrowser && !isSupabaseEnabled) || dbConfig.useMock;
 
-// Get towers based on call clustering
+// Load towers from JSON (local or remote)
+async function loadTowersFromJson(): Promise<Tower[]> {
+  const url = dbConfig.towersJsonUrl || '/towers.json';
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed to fetch towers JSON: ${res.status}`);
+  const json = await res.json();
+  const cells = Array.isArray(json) ? json : json.cells || [];
+  return cells
+    .map((c: any) => ({
+      id: c.cell_id ?? c.id,
+      name: c.name ?? `Cell ${c.cell_id ?? c.id}`,
+      lat: Number(c.lat),
+      lng: Number(c.lon ?? c.lng),
+      status: (c.status === 'down' || c.max_capacity === 0) ? 'down' as const : 'up' as const,
+    }))
+    .filter((t: Tower) => Number.isFinite(t.lat) && Number.isFinite(t.lng));
+}
+
+// Get towers based on call clustering or JSON source
 export async function deriveTowersFromCalls(): Promise<Tower[]> {
+  if (dbConfig.useTowersJson || dbConfig.towersJsonUrl) {
+    try {
+      return await loadTowersFromJson();
+    } catch (error) {
+      console.error('Error loading towers JSON, falling back:', error);
+      // fall through to existing strategies
+    }
+  }
   if (shouldUseMock) {
     console.log('Using mock data for tower derivation');
     const records = getMockCallRecords(500);
@@ -48,8 +74,8 @@ export async function deriveTowersFromCalls(): Promise<Tower[]> {
       .map((cluster, index) => {
         // Calculate drop rate as a percentage
         const dropRate = cluster.calls > 0 ? (cluster.dropped / cluster.calls) * 100 : 0;
-        const status = dropRate > 10 ? "down" : "up"; // More than 10% drop rate means tower is down
-        const downSince = status === "down" ? new Date(Date.now() - Math.random() * 12 * 60 * 60 * 1000) : undefined;
+        const status = dropRate > 10 ? 'down' as const : 'up' as const; // More than 10% drop rate means tower is down
+        const downSince = status === 'down' ? new Date(Date.now() - Math.random() * 12 * 60 * 60 * 1000) : undefined;
         
         return {
           id: index + 1,
