@@ -138,7 +138,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
           `<div>
             <h3 style="font-weight: bold; margin-bottom: 4px;">${tower.name}</h3>
-            ${tower.city ? `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">${tower.city}${tower.areaType ? ` • ${tower.areaType}` : ''}</p>` : ''}
+            ${tower.city ? `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">${tower.city}</p>` : ''}
             <p style="margin: 4px 0;">Status: <span style="color: ${
               tower.status === 'up' ? '#4ade80' : '#f87171'
             };">${tower.status.toUpperCase()}</span></p>
