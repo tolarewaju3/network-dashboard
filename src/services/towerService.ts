@@ -27,6 +27,11 @@ async function loadTowersFromJson(): Promise<Tower[]> {
         lat: Number(c.lat),
         lng: Number(c.lon ?? c.lng),
         status: (c.status === 'down' || c.max_capacity === 0) ? 'down' as const : 'up' as const,
+        bands: c.bands || [],
+        city: c.city,
+        areaType: c.area_type,
+        maxCapacity: c.max_capacity,
+        adjacentCells: c.adjacent_cells || [],
       }))
       .filter((t: Tower) => Number.isFinite(t.lat) && Number.isFinite(t.lng));
   } catch (error) {

@@ -125,12 +125,25 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
         el.style.cursor = 'pointer';
 
         // Create popup with tower information using inline styles instead of Tailwind classes
+        const bandsHtml = tower.bands && tower.bands.length > 0 ? 
+          `<div style="margin: 8px 0;">
+            <p style="margin: 2px 0; font-weight: bold;">Frequency Bands:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
+              ${tower.bands.map(band => 
+                `<span style="background: #3b82f6; color: white; padding: 2px 6px; border-radius: 12px; font-size: 11px;">${band}</span>`
+              ).join('')}
+            </div>
+          </div>` : '';
+        
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
           `<div>
             <h3 style="font-weight: bold; margin-bottom: 4px;">${tower.name}</h3>
+            ${tower.city ? `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">${tower.city}${tower.areaType ? ` • ${tower.areaType}` : ''}</p>` : ''}
             <p style="margin: 4px 0;">Status: <span style="color: ${
               tower.status === 'up' ? '#4ade80' : '#f87171'
             };">${tower.status.toUpperCase()}</span></p>
+            ${tower.maxCapacity ? 
+              `<p style="margin: 4px 0;">Capacity: ${tower.maxCapacity}</p>` : ''}
             ${tower.dropRate !== undefined ? 
               `<p style="margin: 4px 0;">Drop Rate: <span style="${
                 tower.dropRate >= 10 ? 'color: #f87171; font-weight: bold;' : 
@@ -138,7 +151,10 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
               }">${tower.dropRate.toFixed(1)}%</span></p>` : ''}
             ${tower.droppedCalls ? 
               `<p style="margin: 4px 0;">Dropped Calls: ${tower.droppedCalls}</p>` : ''}
-            <p style="margin: 4px 0;">Location: ${tower.lat.toFixed(4)}, ${tower.lng.toFixed(4)}</p>
+            ${bandsHtml}
+            <p style="margin: 4px 0; font-size: 12px; color: #9ca3af;">Location: ${tower.lat.toFixed(4)}, ${tower.lng.toFixed(4)}</p>
+            ${tower.adjacentCells && tower.adjacentCells.length > 0 ? 
+              `<p style="margin: 4px 0; font-size: 11px; color: #9ca3af;">Adjacent: ${tower.adjacentCells.slice(0, 3).join(', ')}${tower.adjacentCells.length > 3 ? '...' : ''}</p>` : ''}
           </div>`
         );
 

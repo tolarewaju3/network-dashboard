@@ -10,6 +10,11 @@ export interface Tower {
   downSince?: Date; // Add timestamp for when tower went down
   droppedCalls?: number; // Track number of dropped calls
   dropRate?: number; // Add drop rate as a percentage
+  bands?: string[]; // Frequency bands supported by the tower
+  city?: string; // City where the tower is located
+  areaType?: string; // Area type (industrial, residential, etc.)
+  maxCapacity?: number; // Maximum capacity of the tower
+  adjacentCells?: number[]; // Adjacent cell IDs
 }
 
 export type EventType = 
