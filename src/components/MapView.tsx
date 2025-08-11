@@ -138,7 +138,9 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
           `<div>
             <h3 style="font-weight: bold; margin-bottom: 4px;">${tower.name}</h3>
-            ${tower.city ? `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">${tower.city}</p>` : ''}
+            ${tower.city ? `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">City: ${tower.city}</p>` : ''}
+            ${tower.adjacentCells && tower.adjacentCells.length > 0 ? 
+              `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">Adjacent Cells: ${tower.adjacentCells.join(', ')}</p>` : ''}
             <p style="margin: 4px 0;">Status: <span style="color: ${
               tower.status === 'up' ? '#4ade80' : '#f87171'
             };">${tower.status.toUpperCase()}</span></p>
@@ -153,8 +155,6 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
               `<p style="margin: 4px 0;">Dropped Calls: ${tower.droppedCalls}</p>` : ''}
             ${bandsHtml}
             <p style="margin: 4px 0; font-size: 12px; color: #9ca3af;">Location: ${tower.lat.toFixed(4)}, ${tower.lng.toFixed(4)}</p>
-            ${tower.adjacentCells && tower.adjacentCells.length > 0 ? 
-              `<p style="margin: 4px 0; font-size: 11px; color: #9ca3af;">Adjacent: ${tower.adjacentCells.slice(0, 3).join(', ')}${tower.adjacentCells.length > 3 ? '...' : ''}</p>` : ''}
           </div>`
         );
 
