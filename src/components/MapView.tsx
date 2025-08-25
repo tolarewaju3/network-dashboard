@@ -3,6 +3,8 @@ import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Tower } from '../types/network';
+import { useAnomalies } from '../hooks/useAnomalies';
+import { hasAnomaly, getAnomalyInfo } from '../services/anomalyService';
 
 interface MapViewProps {
   towers: Tower[];
@@ -13,6 +15,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: number]: mapboxgl.Marker }>({});
+  const { anomalies } = useAnomalies();
 
   useEffect(() => {
     if (!mapContainer.current || !mapboxToken) return;
@@ -91,11 +94,16 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
 
       // Add or update markers for current towers
       towers.forEach(tower => {
-        // Determine marker color based on tower status and dropped calls
+        // Determine marker color based on tower status, anomalies, and dropped calls
         let markerColor = '#4ade80'; // Default green for up status
         let shadowColor = 'rgba(74, 222, 128, 0.6)';
         
-        if (tower.status === 'down') {
+        // Check for anomalies first (highest priority)
+        const towerId = tower.id.toString();
+        if (hasAnomaly(towerId, anomalies)) {
+          markerColor = '#f87171'; // Red for anomalies
+          shadowColor = 'rgba(248, 113, 113, 0.6)';
+        } else if (tower.status === 'down') {
           markerColor = '#f87171'; // Red for down status
           shadowColor = 'rgba(248, 113, 113, 0.6)';
         } else if (tower.dropRate && tower.dropRate >= 2) {
@@ -134,6 +142,15 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
               ).join('')}
             </div>
           </div>` : '';
+
+        // Create anomaly information HTML
+        const anomalyInfo = getAnomalyInfo(towerId, anomalies);
+        const anomalyHtml = anomalyInfo ? 
+          `<div style="margin: 8px 0; padding: 8px; background: rgba(248, 113, 113, 0.1); border-radius: 4px; border-left: 3px solid #f87171;">
+            <p style="margin: 2px 0; font-weight: bold; color: #f87171;">⚠️ Network Anomalies (${anomalyInfo.count})</p>
+            <p style="margin: 2px 0; font-size: 12px;">Types: ${anomalyInfo.types.join(', ')}</p>
+            <p style="margin: 2px 0; font-size: 11px; color: #9ca3af;">Latest: ${anomalyInfo.latestAnomaly}</p>
+          </div>` : '';
         
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
           `<div>
@@ -141,6 +158,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
             ${tower.city ? `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">City: ${tower.city}</p>` : ''}
             ${tower.adjacentCells && tower.adjacentCells.length > 0 ? 
               `<p style="margin: 2px 0; font-size: 12px; color: #9ca3af;">Adjacent Cells: ${tower.adjacentCells.join(', ')}</p>` : ''}
+            ${anomalyHtml}
             <p style="margin: 4px 0;">Status: <span style="color: ${
               tower.status === 'up' ? '#4ade80' : '#f87171'
             };">${tower.status.toUpperCase()}</span></p>
@@ -175,7 +193,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
       map.current.on('load', addMarkers);
     }
 
-  }, [towers, map.current]);
+  }, [towers, anomalies, map.current]);
 
   return (
     <div className="relative w-full h-full">
