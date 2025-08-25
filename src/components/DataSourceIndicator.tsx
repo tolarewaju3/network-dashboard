@@ -52,7 +52,7 @@ export function DataSourceIndicator() {
           <Settings className="h-3 w-3" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="glass-dark border-white/20 w-80">
+      <PopoverContent className="bg-slate-900/95 backdrop-blur-lg border border-white/30 w-80 shadow-2xl">
         <div className="space-y-4">
           <div>
             <h4 className="font-medium text-white mb-2">Data Source</h4>
