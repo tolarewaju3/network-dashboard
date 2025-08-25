@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Event } from '../types/network';
-import { Bell, BellOff, Phone, TowerControl, ArrowUp, ArrowDown, Database, Settings, CheckCircle, MapPin, Signal } from 'lucide-react';
+import { Bell, BellOff, Phone, TowerControl, ArrowUp, ArrowDown, Database, Settings, CheckCircle, MapPin, Signal, AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { dbConfig } from '../config/dbConfig';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -38,6 +38,8 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
         return <Settings size={20} className="text-orange-400" />;
       case 'remediation-completed':
         return <CheckCircle size={20} className="text-green-400" />;
+      case 'anomaly-detected':
+        return <AlertTriangle size={20} className="text-red-400" />;
       default:
         return <TowerControl size={20} className="text-gray-400" />;
     }
@@ -61,6 +63,8 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
         return `${baseClasses} bg-orange-500/10 border border-orange-400/30 hover:bg-orange-500/20`;
       case 'remediation-completed':
         return `${baseClasses} bg-green-500/10 border border-green-400/30 hover:bg-green-500/20`;
+      case 'anomaly-detected':
+        return `${baseClasses} bg-red-500/10 border border-red-400/30 hover:bg-red-500/20`;
       default:
         return `${baseClasses} bg-white/5 border border-white/20 hover:bg-white/10`;
     }
@@ -84,6 +88,8 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
         return `Remediation Started`;
       case 'remediation-completed':
         return `Remediation Completed`;
+      case 'anomaly-detected':
+        return `Anomaly Detected`;
       default:
         return `Unknown Event`;
     }
@@ -161,8 +167,24 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
                       <span>Signal: {event.signalStrength} dBm</span>
                     </div>
                   </div>
-                )}
-                <div className="flex flex-wrap gap-2 mt-2">
+                 )}
+                 {event.type === 'anomaly-detected' && (event.anomalyType || event.band) && (
+                   <div className="space-y-1 mt-2">
+                     {event.anomalyType && (
+                       <div className="flex items-center gap-2 text-sm text-white/80">
+                         <AlertTriangle size={14} className="text-red-400 drop-shadow-sm" />
+                         <span>Type: {event.anomalyType}</span>
+                       </div>
+                     )}
+                     {event.band && (
+                       <div className="flex items-center gap-2 text-sm text-white/80">
+                         <Signal size={14} className="text-orange-400 drop-shadow-sm" />
+                         <span>Band: {event.band}</span>
+                       </div>
+                     )}
+                   </div>
+                 )}
+                 <div className="flex flex-wrap gap-2 mt-2">
                   {event.cellId && (
                     <div className="text-xs glass-dark px-2 py-1 rounded-sm text-white/80 backdrop-blur-sm">
                       Tower: {event.cellId}

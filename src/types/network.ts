@@ -25,7 +25,8 @@ export type EventType =
   | "alert-triggered" 
   | "alert-resolved"
   | "remediation-started"
-  | "remediation-completed";
+  | "remediation-completed"
+  | "anomaly-detected";
 
 export interface Event {
   type: EventType;
@@ -36,6 +37,9 @@ export interface Event {
   recoveryTime?: number; // Add recovery time in minutes (for tower-up events)
   location?: { lat: number; lng: number }; // Add location for call events
   signalStrength?: number; // Add signal strength for call events
+  anomalyType?: string; // Add anomaly type for anomaly events
+  band?: string; // Add band for anomaly events
+  sourceId?: string; // Add source ID for anomaly events
 }
 
 export interface CallRecord {

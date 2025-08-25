@@ -6,6 +6,7 @@ import StatusHeader from "../components/StatusHeader";
 import { DataSourceIndicator } from "../components/DataSourceIndicator";
 import { useCallRecords } from "../hooks/useCallRecords";
 import { useRemediationEvents } from "../hooks/useRemediationEvents";
+import { useAnomalyEvents } from "../hooks/useAnomalyEvents";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleAlert } from "lucide-react";
 
@@ -13,17 +14,18 @@ const Index = () => {
   // Use our custom hooks to fetch data
   const { towers, callEvents, avgRecoveryTime, isLoading: callsLoading, isError: callsError } = useCallRecords();
   const { events: remediationEvents, isLoading: remediationLoading, isError: remediationError } = useRemediationEvents();
+  const { events: anomalyEvents, isLoading: anomalyLoading, isError: anomalyError } = useAnomalyEvents();
   
   // Combine and sort all events
-  const allEvents = [...callEvents, ...remediationEvents].sort((a, b) => 
+  const allEvents = [...callEvents, ...remediationEvents, ...anomalyEvents].sort((a, b) => 
     b.timestamp.getTime() - a.timestamp.getTime()
   );
 
   // Hardcoded Mapbox token - replace with your actual token
   const mapboxToken = "pk.eyJ1IjoidG9sYXJld2EiLCJhIjoiY21hYmd6d3c5MmRqOTJpbzlzbXo5amZrMCJ9.WH8s7dEAXdTf_u08Clikig";
 
-  const isLoading = callsLoading || remediationLoading;
-  const isError = callsError || remediationError;
+  const isLoading = callsLoading || remediationLoading || anomalyLoading;
+  const isError = callsError || remediationError || anomalyError;
 
   if (isError) {
     return (

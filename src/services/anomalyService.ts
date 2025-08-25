@@ -1,3 +1,5 @@
+import { Event } from '../types/network';
+
 interface AnomalyRecord {
   cell_id: number;
   band: string;
@@ -73,6 +75,21 @@ export function hasAnomaly(cellId: string, anomalyMap: Map<string, ProcessedAnom
 
 export function getAnomalyInfo(cellId: string, anomalyMap: Map<string, ProcessedAnomaly>): ProcessedAnomaly | null {
   return anomalyMap.get(cellId) || null;
+}
+
+// Convert anomaly records to events for LiveFeed
+export function convertAnomaliesToEvents(anomalies: AnomalyRecord[]): Event[] {
+  return anomalies.map(anomaly => ({
+    type: "anomaly-detected" as const,
+    timestamp: new Date(anomaly.creation_date),
+    message: `${anomaly.anomaly_type}: ${anomaly.anomaly}`,
+    towerId: anomaly.cell_id,
+    cellId: anomaly.cell_id.toString(),
+    // Add anomaly-specific data
+    anomalyType: anomaly.anomaly_type,
+    band: anomaly.band,
+    sourceId: anomaly.source_id
+  }));
 }
 
 // Clear cache when needed
