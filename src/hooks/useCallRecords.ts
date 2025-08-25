@@ -18,50 +18,29 @@ export function useCallRecords(limit: number = 100) {
   const callsQuery = useQuery({
     queryKey: ['callRecords', limit],
     queryFn: () => fetchCallRecords(limit),
-    refetchInterval: dbConfig.useSupabase ? false : 5000, // Only poll if not using Supabase
+    refetchInterval: 5000, // Poll every 5 seconds with mock data
   });
 
   // Derive towers from call patterns
   const towersQuery = useQuery({
     queryKey: ['towers'],
     queryFn: deriveTowersFromCalls,
-    refetchInterval: dbConfig.useSupabase
-      ? false
-      : dbConfig.useTowersJson
-        ? (dbConfig.towersJsonPollMs || 15000)
-        : 10000, // Poll JSON at configured interval, otherwise default
+    refetchInterval: dbConfig.useTowersJson
+      ? (dbConfig.towersJsonPollMs || 15000)
+      : 10000, // Poll JSON at configured interval, otherwise default
   });
   
   // Get average recovery time
   const recoveryTimeQuery = useQuery({
     queryKey: ['recoveryTime'],
     queryFn: getAvgRecoveryTime,
-    refetchInterval: dbConfig.useSupabase ? false : 30000, // Only poll if not using Supabase
+    refetchInterval: 30000, // Poll every 30 seconds with mock data
   });
 
-  // Set up Supabase real-time subscriptions if enabled
+  // No real-time subscriptions with mock data
   useEffect(() => {
-    if (!dbConfig.useSupabase) return;
-    
-    const subscription = subscribeToCallRecords((newRecords) => {
-      // Update the call records in the cache
-      queryClient.setQueryData<CallRecord[]>(['callRecords', limit], (oldData = []) => {
-        const combined = [...newRecords, ...oldData];
-        // Sort by timestamp (newest first) and limit to specified count
-        return combined
-          .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-          .slice(0, limit);
-      });
-      
-      // Invalidate related queries to trigger refetching
-      queryClient.invalidateQueries({ queryKey: ['towers'] });
-      queryClient.invalidateQueries({ queryKey: ['recoveryTime'] });
-    });
-    
-    // Clean up subscription when component unmounts
-    return () => {
-      subscription?.unsubscribe();
-    };
+    // Mock data doesn't support real-time subscriptions
+    console.log('Real-time subscriptions not available with mock data');
   }, [queryClient, limit]);
 
   // Convert call records to events for LiveFeed, ensuring we have valid timestamps

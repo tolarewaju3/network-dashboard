@@ -17,7 +17,7 @@ export function DataSourceIndicator() {
     return localStorage.getItem('custom-json-url') || dbConfig.towersJsonUrl || '/towers.json';
   });
 
-  const currentSource = useJson ? 'JSON' : (dbConfig.useSupabase ? 'Supabase' : 'Mock');
+  const currentSource = useJson ? 'JSON' : 'Mock';
   const sourceIcon = useJson ? FileJson : Database;
   const SourceIcon = sourceIcon;
 
@@ -94,7 +94,7 @@ export function DataSourceIndicator() {
           
           <div className="text-xs text-white/60 space-y-1">
             <p>• JSON: Load towers from JSON URL or file</p>
-            <p>• Supabase: Load from connected database</p>
+            <p>• Mock: Use generated mock data</p>
             <p className="text-yellow-400">Note: Changes require page reload</p>
           </div>
         </div>

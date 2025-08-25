@@ -91,12 +91,10 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
 
   // Determine data source display text
   const getDataSourceText = () => {
-    if (dbConfig.useSupabase) {
-      return 'Supabase';
-    } else if (dbConfig.useMock) {
+    if (dbConfig.useMock) {
       return 'Mock DB';
     } else {
-      return 'MySQL';
+      return 'JSON';
     }
   };
 
