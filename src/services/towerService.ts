@@ -15,7 +15,9 @@ const shouldUseMock = (isBrowser && !isSupabaseEnabled) || dbConfig.useMock;
 // Load towers from JSON (local or remote)
 async function loadTowersFromJson(): Promise<Tower[]> {
   try {
-    const url = dbConfig.towersJsonUrl || '/towers.json';
+    // Check for custom URL in localStorage first, then config, then default
+    const customUrl = typeof window !== 'undefined' ? localStorage.getItem('custom-json-url') : null;
+    const url = customUrl || dbConfig.towersJsonUrl || '/towers.json';
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to fetch towers JSON: ${res.status}`);
     const json = await res.json();
