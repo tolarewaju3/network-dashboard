@@ -1,5 +1,5 @@
 interface AnomalyRecord {
-  cell_id: string;
+  cell_id: number;
   band: string;
   anomaly_type: string;
   anomaly: string;
@@ -39,7 +39,7 @@ export async function processAnomalies(): Promise<Map<string, ProcessedAnomaly>>
   const processedMap = new Map<string, ProcessedAnomaly>();
 
   anomalies.forEach(anomaly => {
-    const cellId = anomaly.cell_id;
+    const cellId = anomaly.cell_id.toString();
     
     if (processedMap.has(cellId)) {
       const existing = processedMap.get(cellId)!;
