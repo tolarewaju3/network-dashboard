@@ -52,7 +52,7 @@ export function DataSourceIndicator() {
           <Settings className="h-3 w-3" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="glass-card border-white/20 w-80">
+      <PopoverContent className="glass-dark border-white/20 w-80">
         <div className="space-y-4">
           <div>
             <h4 className="font-medium text-white mb-2">Data Source</h4>
