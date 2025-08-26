@@ -1,7 +1,5 @@
-
 import { Tower } from "../types/network";
 import { Progress } from "@/components/ui/progress";
-
 interface ProcessedAnomaly {
   cellId: string;
   count: number;
@@ -9,55 +7,44 @@ interface ProcessedAnomaly {
   latestAnomaly: string;
   latestDate: string;
 }
-
 interface StatusHeaderProps {
   towers: Tower[];
   avgRecoveryTime: number;
   anomalies: Map<string, ProcessedAnomaly>;
 }
-
-const StatusHeader: React.FC<StatusHeaderProps> = ({ towers, avgRecoveryTime, anomalies }) => {
+const StatusHeader: React.FC<StatusHeaderProps> = ({
+  towers,
+  avgRecoveryTime,
+  anomalies
+}) => {
   const totalTowers = towers.length;
   const activeTowers = towers.filter(tower => tower.status === "up").length;
   const towersWithAnomalies = towers.filter(tower => anomalies.has(tower.id.toString())).length;
-  
-  const healthPercentage = totalTowers > 0 
-    ? Math.floor((activeTowers / totalTowers) * 100) 
-    : 0;
-  
+  const healthPercentage = totalTowers > 0 ? Math.floor(activeTowers / totalTowers * 100) : 0;
+
   // Format recovery time in a human-readable way (input is now in seconds)
   const formatRecoveryTime = (seconds: number): string => {
     if (seconds === 0) return "N/A";
-    
     if (seconds < 60) {
       return `${Math.round(seconds)} seconds`;
     }
-    
     const minutes = seconds / 60;
-    
     if (minutes < 60) {
       const wholeMinutes = Math.floor(minutes);
       const remainingSeconds = Math.round(seconds % 60);
-      
       if (remainingSeconds === 0) {
         return wholeMinutes === 1 ? "1 minute" : `${wholeMinutes} minutes`;
       }
-      
       return `${wholeMinutes}m ${remainingSeconds}s`;
     }
-    
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = Math.round(minutes % 60);
-    
     if (remainingMinutes === 0) {
       return hours === 1 ? "1 hour" : `${hours} hours`;
     }
-    
     return `${hours}h ${remainingMinutes}m`;
   };
-  
-  return (
-    <header className="glass-dark border-b border-white/10 py-4 backdrop-blur-lg">
+  return <header className="glass-dark border-b border-white/10 py-4 backdrop-blur-lg">
       <div className="container mx-auto px-4">
         <h1 className="text-2xl font-bold mb-4 text-white/95 drop-shadow-lg">Network Dashboard</h1>
         
@@ -69,10 +56,9 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({ towers, avgRecoveryTime, an
                 {healthPercentage}%
               </div>
               <div className="w-32 h-2 bg-white/20 rounded-full ml-3 overflow-hidden backdrop-blur-sm">
-                <div 
-                  className={`h-full rounded-full transition-all duration-500 ${healthPercentage >= 90 ? 'bg-green-400 shadow-green-400/50' : healthPercentage >= 70 ? 'bg-yellow-400 shadow-yellow-400/50' : 'bg-red-400 shadow-red-400/50'} shadow-lg`}
-                  style={{ width: `${healthPercentage}%` }}
-                ></div>
+                <div className={`h-full rounded-full transition-all duration-500 ${healthPercentage >= 90 ? 'bg-green-400 shadow-green-400/50' : healthPercentage >= 70 ? 'bg-yellow-400 shadow-yellow-400/50' : 'bg-red-400 shadow-red-400/50'} shadow-lg`} style={{
+                width: `${healthPercentage}%`
+              }}></div>
               </div>
             </div>
           </div>
@@ -90,7 +76,7 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({ towers, avgRecoveryTime, an
           </div>
           
           <div className="stat-card">
-            <div className="text-white/70 text-sm font-medium">Active Towers</div>
+            <div className="text-white/70 text-sm font-medium">Healthy Towers</div>
             <div className="text-2xl font-bold text-green-400 drop-shadow-md">{activeTowers}</div>
           </div>
           
@@ -100,8 +86,6 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({ towers, avgRecoveryTime, an
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 };
-
 export default StatusHeader;
