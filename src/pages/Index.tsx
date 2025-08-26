@@ -7,6 +7,7 @@ import { DataSourceIndicator } from "../components/DataSourceIndicator";
 import { useCallRecords } from "../hooks/useCallRecords";
 import { useRemediationEvents } from "../hooks/useRemediationEvents";
 import { useAnomalyEvents } from "../hooks/useAnomalyEvents";
+import { useAnomalies } from "../hooks/useAnomalies";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleAlert } from "lucide-react";
 
@@ -15,6 +16,7 @@ const Index = () => {
   const { towers, callEvents, avgRecoveryTime, isLoading: callsLoading, isError: callsError } = useCallRecords();
   const { events: remediationEvents, isLoading: remediationLoading, isError: remediationError } = useRemediationEvents();
   const { events: anomalyEvents, isLoading: anomalyLoading, isError: anomalyError } = useAnomalyEvents();
+  const { anomalies, isLoading: anomaliesLoading, isError: anomaliesError } = useAnomalies();
   
   // Combine and sort all events
   const allEvents = [...callEvents, ...remediationEvents, ...anomalyEvents].sort((a, b) => 
@@ -24,8 +26,8 @@ const Index = () => {
   // Hardcoded Mapbox token - replace with your actual token
   const mapboxToken = "pk.eyJ1IjoidG9sYXJld2EiLCJhIjoiY21hYmd6d3c5MmRqOTJpbzlzbXo5amZrMCJ9.WH8s7dEAXdTf_u08Clikig";
 
-  const isLoading = callsLoading || remediationLoading || anomalyLoading;
-  const isError = callsError || remediationError || anomalyError;
+  const isLoading = callsLoading || remediationLoading || anomalyLoading || anomaliesLoading;
+  const isError = callsError || remediationError || anomalyError || anomaliesError;
 
   if (isError) {
     return (
@@ -52,7 +54,7 @@ const Index = () => {
       
       <div className="relative z-10">
         <div className="flex justify-between items-center px-4 py-2">
-          <StatusHeader towers={towers} avgRecoveryTime={avgRecoveryTime} />
+          <StatusHeader towers={towers} avgRecoveryTime={avgRecoveryTime} anomalies={anomalies} />
           <DataSourceIndicator />
         </div>
         

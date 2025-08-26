@@ -2,15 +2,24 @@
 import { Tower } from "../types/network";
 import { Progress } from "@/components/ui/progress";
 
+interface ProcessedAnomaly {
+  cellId: string;
+  count: number;
+  types: string[];
+  latestAnomaly: string;
+  latestDate: string;
+}
+
 interface StatusHeaderProps {
   towers: Tower[];
   avgRecoveryTime: number;
+  anomalies: Map<string, ProcessedAnomaly>;
 }
 
-const StatusHeader: React.FC<StatusHeaderProps> = ({ towers, avgRecoveryTime }) => {
+const StatusHeader: React.FC<StatusHeaderProps> = ({ towers, avgRecoveryTime, anomalies }) => {
   const totalTowers = towers.length;
   const activeTowers = towers.filter(tower => tower.status === "up").length;
-  const downTowers = totalTowers - activeTowers;
+  const towersWithAnomalies = towers.filter(tower => anomalies.has(tower.id.toString())).length;
   
   const healthPercentage = totalTowers > 0 
     ? Math.floor((activeTowers / totalTowers) * 100) 
@@ -86,8 +95,8 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({ towers, avgRecoveryTime }) 
           </div>
           
           <div className="stat-card">
-            <div className="text-white/70 text-sm font-medium">Down Towers</div>
-            <div className="text-2xl font-bold text-red-400 drop-shadow-md">{downTowers}</div>
+            <div className="text-white/70 text-sm font-medium">w/ Anomalies</div>
+            <div className="text-2xl font-bold text-red-400 drop-shadow-md">{towersWithAnomalies}</div>
           </div>
         </div>
       </div>
