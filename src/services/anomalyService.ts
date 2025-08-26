@@ -1,4 +1,6 @@
 import { Event } from '../types/network';
+import { dbConfig } from '../config/dbConfig';
+import { toast } from '@/hooks/use-toast';
 
 interface AnomalyRecord {
   cell_id: number;
@@ -21,13 +23,23 @@ let anomalyCache: Map<string, ProcessedAnomaly> | null = null;
 
 export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
   try {
-    const response = await fetch('/anomalies.json');
+    // Check for custom URL in localStorage first, then config, then default
+    const customUrl = typeof window !== 'undefined' ? localStorage.getItem('custom-anomalies-url') : null;
+    const url = customUrl || dbConfig.anomaliesJsonUrl || '/anomalies.json';
+    
+    console.log('Fetching anomalies from:', url);
+    const response = await fetch(url, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`Failed to fetch anomalies: ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
     console.error('Error fetching anomalies:', error);
+    toast({
+      title: "Anomalies Loading Error",
+      description: "Failed to load anomalies from JSON file. Check console for details.",
+      variant: "destructive",
+    });
     return [];
   }
 }

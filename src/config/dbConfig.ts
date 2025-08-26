@@ -5,6 +5,10 @@ interface DbConfig {
   useTowersJson: boolean;
   towersJsonUrl: string;
   towersJsonPollMs: number;
+  // Anomalies JSON configuration
+  useAnomaliesJson: boolean;
+  anomaliesJsonUrl: string;
+  anomaliesJsonPollMs: number;
 }
 
 // Check if running in browser
@@ -17,6 +21,10 @@ const defaultConfig: DbConfig = {
   useTowersJson: true,
   towersJsonUrl: '',
   towersJsonPollMs: 15000,
+  // Anomalies JSON defaults
+  useAnomaliesJson: true,
+  anomaliesJsonUrl: '',
+  anomaliesJsonPollMs: 30000,
 };
 
 // In Vite, environment variables are exposed through import.meta.env instead of process.env
@@ -28,6 +36,10 @@ export const dbConfig: DbConfig = {
   useTowersJson: Boolean(import.meta.env.VITE_TOWERS_JSON_URL || import.meta.env.VITE_USE_TOWERS_JSON === 'true'),
   towersJsonUrl: import.meta.env.VITE_TOWERS_JSON_URL || defaultConfig.towersJsonUrl,
   towersJsonPollMs: Number(import.meta.env.VITE_TOWERS_JSON_POLL_MS) || defaultConfig.towersJsonPollMs,
+  // Anomalies JSON configuration
+  useAnomaliesJson: Boolean(import.meta.env.VITE_ANOMALIES_JSON_URL || import.meta.env.VITE_USE_ANOMALIES_JSON === 'true'),
+  anomaliesJsonUrl: import.meta.env.VITE_ANOMALIES_JSON_URL || defaultConfig.anomaliesJsonUrl,
+  anomaliesJsonPollMs: Number(import.meta.env.VITE_ANOMALIES_JSON_POLL_MS) || defaultConfig.anomaliesJsonPollMs,
 };
 
 export default dbConfig;
