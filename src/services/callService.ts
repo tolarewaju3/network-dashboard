@@ -1,25 +1,15 @@
 import { CallRecord, Event } from '../types/network';
-import { dbConfig } from '../config/dbConfig';
-import { getMockCallRecords } from './mockDataService';
 
-// Always use mock data now
-const shouldUseMock = true;
-
-// Function to fetch call records
+// Function to fetch call records (returns empty array - no mock data)
 export async function fetchCallRecords(limit: number = 100): Promise<CallRecord[]> {
-  console.log('Using mock data for call records');
-  const mockRecords = getMockCallRecords(500);
-  return mockRecords.slice(0, limit);
+  console.log('No call records available - mock data removed');
+  return [];
 }
 
-// Function to fetch recent dropped calls
+// Function to fetch recent dropped calls (returns empty array - no mock data)
 export async function fetchRecentDroppedCalls(minutes: number = 30): Promise<CallRecord[]> {
-  const records = getMockCallRecords(500);
-  const cutoffTime = new Date(Date.now() - minutes * 60 * 1000);
-  
-  return records.filter(record => 
-    record.isDropped && record.timestamp > cutoffTime
-  );
+  console.log('No dropped calls available - mock data removed');
+  return [];
 }
 
 // Convert call records to events for the LiveFeed
