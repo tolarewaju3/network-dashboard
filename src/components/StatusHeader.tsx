@@ -20,7 +20,8 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
   const totalTowers = towers.length;
   const activeTowers = towers.filter(tower => tower.status === "up").length;
   const towersWithAnomalies = towers.filter(tower => anomalies.has(tower.id.toString())).length;
-  const healthPercentage = totalTowers > 0 ? Math.floor(activeTowers / totalTowers * 100) : 0;
+  const healthyTowers = towers.filter(tower => tower.status === "up" && !anomalies.has(tower.id.toString())).length;
+  const healthPercentage = totalTowers > 0 ? Math.floor(healthyTowers / totalTowers * 100) : 0;
 
   // Format recovery time in a human-readable way (input is now in seconds)
   const formatRecoveryTime = (seconds: number): string => {
@@ -77,7 +78,7 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
           
           <div className="stat-card">
             <div className="text-white/70 text-sm font-medium">Healthy Towers</div>
-            <div className="text-2xl font-bold text-green-400 drop-shadow-md">{activeTowers}</div>
+            <div className="text-2xl font-bold text-green-400 drop-shadow-md">{healthyTowers}</div>
           </div>
           
           <div className="stat-card">
