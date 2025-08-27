@@ -156,7 +156,7 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
               <SelectValue placeholder="All Cells" />
             </SelectTrigger>
             <SelectContent className="bg-gray-900/95 border-white/30 backdrop-blur-lg text-white">
-              <SelectItem value="all" className="text-white/90 hover:bg-white/20 focus:bg-white/20 focus:text-white">All Towers</SelectItem>
+              <SelectItem value="all" className="text-white/90 hover:bg-white/20 focus:bg-white/20 focus:text-white">All Cells</SelectItem>
               {uniqueCellIds.map(cellId => (
                 <SelectItem key={cellId} value={cellId} className="text-white/90 hover:bg-white/20 focus:bg-white/20 focus:text-white">
                   {cellId}
@@ -228,7 +228,7 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
                  <div className="flex flex-wrap gap-2 mt-2">
                   {event.cellId && (
                     <div className="text-xs glass-dark px-2 py-1 rounded-sm text-white/80 backdrop-blur-sm">
-                      Tower: {event.cellId}
+                      Cell: {event.cellId}
                     </div>
                   )}
                 </div>
