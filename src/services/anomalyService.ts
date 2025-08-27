@@ -23,9 +23,9 @@ let anomalyCache: Map<string, ProcessedAnomaly> | null = null;
 
 export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
   try {
-    // Check for custom URL in localStorage first, then config, then default
+    // Priority: default URL (with env variable fallback), then custom URL from localStorage, then local file
     const customUrl = typeof window !== 'undefined' ? localStorage.getItem('custom-anomalies-url') : null;
-    const url = customUrl || dbConfig.anomaliesJsonUrl || '/anomalies.json';
+    const url = dbConfig.anomaliesJsonUrl || customUrl || '/anomalies.json';
     
     console.log('Fetching anomalies from:', url);
     const response = await fetch(url, { cache: 'no-store' });
