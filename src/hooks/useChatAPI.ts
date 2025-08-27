@@ -37,10 +37,12 @@ export const useChatAPI = (): UseChatAPIReturn => {
     try {
       console.log('Attempting to send message:', query);
       
-      // Try direct API call without Content-Type header to avoid CORS preflight
-      const response = await fetch('https://ranchat-ai-cloud-ran-genai.apps.acmhub.dinesh154.dfw.ocp.run/api/query', {
+      // Use proxy endpoint to avoid CORS issues
+      const response = await fetch('/api/chat', {
         method: 'POST',
-        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ query }),
       });
 
@@ -84,10 +86,10 @@ export const useChatAPI = (): UseChatAPIReturn => {
       // Try fallback with different approach
       try {
         console.log('Trying fallback approach...');
-        const fallbackResponse = await fetch('https://ranchat-ai-cloud-ran-genai.apps.acmhub.dinesh154.dfw.ocp.run/api/query', {
+        const fallbackResponse = await fetch('/api/chat', {
           method: 'POST',
           headers: {
-            'Accept': 'text/plain, */*',
+            'Content-Type': 'text/plain',
           },
           body: query, // Send as plain text
         });
