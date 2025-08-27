@@ -1,5 +1,9 @@
 import { Tower } from "../types/network";
 import { Progress } from "@/components/ui/progress";
+import { getAnomalyDataSource } from "../services/anomalyService";
+import { useEffect, useState } from "react";
+import { Badge } from "./ui/badge";
+import { AlertTriangle, CheckCircle } from "lucide-react";
 interface ProcessedAnomaly {
   cellId: string;
   count: number;
@@ -17,6 +21,21 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
   avgRecoveryTime,
   anomalies
 }) => {
+  const [dataSource, setDataSource] = useState<{ isUsingFallback: boolean; dataSource: string } | null>(null);
+
+  // Check data source status periodically
+  useEffect(() => {
+    const checkDataSource = () => {
+      const source = getAnomalyDataSource();
+      setDataSource(source);
+    };
+    
+    checkDataSource();
+    const interval = setInterval(checkDataSource, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   const totalTowers = towers.length;
   const activeTowers = towers.filter(tower => tower.status === "up").length;
   const towersWithAnomalies = towers.filter(tower => anomalies.has(tower.id.toString())).length;
@@ -47,7 +66,28 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
   };
   return <header className="glass-dark border-b border-white/10 py-4 backdrop-blur-lg">
       <div className="container mx-auto px-4">
-        <h1 className="text-2xl font-bold mb-4 text-white/95 drop-shadow-lg">Network Dashboard</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold text-white/95 drop-shadow-lg">Network Dashboard</h1>
+          
+          {dataSource && (
+            <Badge 
+              variant={dataSource.isUsingFallback ? "destructive" : "default"} 
+              className="flex items-center gap-1"
+            >
+              {dataSource.isUsingFallback ? (
+                <>
+                  <AlertTriangle size={14} />
+                  Fallback Mode (Local JSON)
+                </>
+              ) : (
+                <>
+                  <CheckCircle size={14} />
+                  Remote API
+                </>
+              )}
+            </Badge>
+          )}
+        </div>
         
         <div className="flex flex-wrap gap-6">
           <div className="stat-card">

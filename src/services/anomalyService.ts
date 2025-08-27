@@ -20,9 +20,16 @@ interface ProcessedAnomaly {
   latestDate: string;
 }
 
-let anomalyCache: Map<string, ProcessedAnomaly> | null = null;
+interface AnomalyFetchResult {
+  anomalies: AnomalyRecord[];
+  isUsingFallback: boolean;
+  dataSource: string;
+}
 
-export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
+let anomalyCache: Map<string, ProcessedAnomaly> | null = null;
+let lastFetchResult: AnomalyFetchResult | null = null;
+
+export async function fetchAnomalies(): Promise<AnomalyFetchResult> {
   // Priority: default URL (with env variable fallback), then custom URL from localStorage
   const customUrl = typeof window !== 'undefined' ? localStorage.getItem('custom-anomalies-url') : null;
   const primaryUrl = dbConfig.anomaliesJsonUrl || customUrl;
@@ -48,7 +55,13 @@ export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
         throw new Error('Response is not an array of anomalies');
       }
       
-      return data;
+      const result: AnomalyFetchResult = {
+        anomalies: data,
+        isUsingFallback: false,
+        dataSource: primaryUrl
+      };
+      lastFetchResult = result;
+      return result;
     } catch (error) {
       console.error('Error fetching anomalies from primary URL:', error);
       console.log('Falling back to local anomalies.json file');
@@ -63,7 +76,13 @@ export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
       throw new Error(`Failed to fetch local anomalies: ${response.statusText}`);
     }
     const data = await response.json();
-    return data;
+    const result: AnomalyFetchResult = {
+      anomalies: data,
+      isUsingFallback: true,
+      dataSource: '/anomalies.json'
+    };
+    lastFetchResult = result;
+    return result;
   } catch (error) {
     console.error('Error fetching anomalies from local file:', error);
     toast({
@@ -71,7 +90,13 @@ export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
       description: "Failed to load anomalies from both remote URL and local file. Check console for details.",
       variant: "destructive",
     });
-    return [];
+    const result: AnomalyFetchResult = {
+      anomalies: [],
+      isUsingFallback: true,
+      dataSource: 'error'
+    };
+    lastFetchResult = result;
+    return result;
   }
 }
 
@@ -80,7 +105,8 @@ export async function processAnomalies(): Promise<Map<string, ProcessedAnomaly>>
     return anomalyCache;
   }
 
-  const anomalies = await fetchAnomalies();
+  const result = await fetchAnomalies();
+  const anomalies = result.anomalies;
   const processedMap = new Map<string, ProcessedAnomaly>();
 
   anomalies.forEach(anomaly => {
@@ -160,7 +186,16 @@ export function convertAnomaliesToEvents(anomalies: AnomalyRecord[]): Event[] {
   });
 }
 
+// Get fallback status
+export function getAnomalyDataSource(): { isUsingFallback: boolean; dataSource: string } | null {
+  return lastFetchResult ? {
+    isUsingFallback: lastFetchResult.isUsingFallback,
+    dataSource: lastFetchResult.dataSource
+  } : null;
+}
+
 // Clear cache when needed
 export function clearAnomalyCache(): void {
   anomalyCache = null;
+  lastFetchResult = null;
 }

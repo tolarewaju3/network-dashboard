@@ -6,8 +6,8 @@ export function useAnomalyEvents() {
   const anomalyEventsQuery = useQuery({
     queryKey: ['anomalyEvents'],
     queryFn: async (): Promise<Event[]> => {
-      const anomalies = await fetchAnomalies();
-      return convertAnomaliesToEvents(anomalies);
+      const result = await fetchAnomalies();
+      return convertAnomaliesToEvents(result.anomalies);
     },
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
     refetchInterval: 5000, // Refetch every 5 seconds
