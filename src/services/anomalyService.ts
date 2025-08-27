@@ -23,22 +23,40 @@ interface ProcessedAnomaly {
 let anomalyCache: Map<string, ProcessedAnomaly> | null = null;
 
 export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
-  try {
-    // Priority: default URL (with env variable fallback), then custom URL from localStorage, then local file
-    const customUrl = typeof window !== 'undefined' ? localStorage.getItem('custom-anomalies-url') : null;
-    const url = dbConfig.anomaliesJsonUrl || customUrl || '/anomalies.json';
-    
-    console.log('Fetching anomalies from:', url);
-    const response = await fetch(url, { cache: 'no-store' });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch anomalies: ${response.statusText}`);
+  // Priority: default URL (with env variable fallback), then custom URL from localStorage
+  const customUrl = typeof window !== 'undefined' ? localStorage.getItem('custom-anomalies-url') : null;
+  const primaryUrl = dbConfig.anomaliesJsonUrl || customUrl;
+  
+  // Try primary URL first
+  if (primaryUrl) {
+    try {
+      console.log('Fetching anomalies from:', primaryUrl);
+      const response = await fetch(primaryUrl, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch anomalies: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching anomalies from primary URL:', error);
+      console.log('Falling back to local anomalies.json file');
     }
-    return await response.json();
+  }
+  
+  // Fallback to local file
+  try {
+    console.log('Fetching anomalies from local file: /anomalies.json');
+    const response = await fetch('/anomalies.json', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch local anomalies: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error('Error fetching anomalies:', error);
+    console.error('Error fetching anomalies from local file:', error);
     toast({
       title: "Anomalies Loading Error",
-      description: "Failed to load anomalies from JSON file. Check console for details.",
+      description: "Failed to load anomalies from both remote URL and local file. Check console for details.",
       variant: "destructive",
     });
     return [];
