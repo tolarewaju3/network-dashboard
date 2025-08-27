@@ -157,30 +157,18 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
               </div>
             </div>
 
-            {/* Tower/Cell Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Cell Information */}
+            {event.cellId && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Radio size={16} />
-                  <span>Tower ID</span>
+                  <TowerControl size={16} />
+                  <span>Cell ID</span>
                 </div>
                 <div className="glass-dark p-3 rounded-md">
-                  <p className="text-white/90 font-mono">{event.towerId}</p>
+                  <p className="text-white/90 font-mono">{event.cellId}</p>
                 </div>
               </div>
-
-              {event.cellId && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-white/60">
-                    <TowerControl size={16} />
-                    <span>Cell ID</span>
-                  </div>
-                  <div className="glass-dark p-3 rounded-md">
-                    <p className="text-white/90 font-mono">{event.cellId}</p>
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
 
             {/* Message */}
             {event.message && (
