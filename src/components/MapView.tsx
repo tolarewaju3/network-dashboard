@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Tower } from '../types/network';
 import { useAnomalies } from '../hooks/useAnomalies';
 import { hasAnomaly, getAnomalyInfo } from '../services/anomalyService';
+import { useTheme } from 'next-themes';
 
 interface MapViewProps {
   towers: Tower[];
@@ -16,6 +17,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: number]: mapboxgl.Marker }>({});
   const { anomalies } = useAnomalies();
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (!mapContainer.current || !mapboxToken) return;
@@ -25,7 +27,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
     
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
+      style: theme === 'dark' ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/light-v11',
       center: [-98.5795, 39.8283], // Center of the US
       zoom: 3,
     });
@@ -71,7 +73,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
         document.head.removeChild(styleElement);
       }
     };
-  }, [mapboxToken]);
+  }, [mapboxToken, theme]);
 
   // Update markers when towers change
   useEffect(() => {
