@@ -112,7 +112,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto glass-card border-border text-foreground !bg-transparent">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto glass-card border-border text-foreground bg-card">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-xl text-foreground">
             <div className="p-2 glass rounded-md backdrop-blur-sm">
@@ -134,7 +134,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
                   <Calendar size={16} />
                   <span>Timestamp</span>
                 </div>
-                <div className="glass-dark p-3 rounded-md">
+                <div className="glass p-3 rounded-md">
                   <p className="text-foreground font-medium">
                     {format(new Date(event.timestamp), 'PPpp')}
                   </p>
@@ -149,7 +149,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
                   <Database size={16} />
                   <span>Event Type</span>
                 </div>
-                <div className="glass-dark p-3 rounded-md">
+                <div className="glass p-3 rounded-md">
                   <Badge variant={getEventBadgeVariant(event.type)} className="text-sm">
                     {event.type.replace('-', ' ').toUpperCase()}
                   </Badge>
@@ -164,7 +164,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
                   <TowerControl size={16} />
                   <span>Cell ID</span>
                 </div>
-                <div className="glass-dark p-3 rounded-md">
+                <div className="glass p-3 rounded-md">
                   <p className="text-foreground font-mono">{event.cellId}</p>
                 </div>
               </div>
@@ -177,7 +177,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
                   <AlertTriangle size={16} />
                   <span>Message</span>
                 </div>
-                <div className="glass-dark p-3 rounded-md">
+                <div className="glass p-3 rounded-md">
                   <p className="text-foreground">{event.message}</p>
                 </div>
               </div>
@@ -193,12 +193,12 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
               
               {event.location && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-white/60">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <MapPin size={16} />
                     <span>Location</span>
                   </div>
-                  <div className="glass-dark p-3 rounded-md">
-                    <p className="text-white/90 font-mono">
+                  <div className="glass p-3 rounded-md">
+                    <p className="text-foreground font-mono">
                       Lat: {event.location.lat.toFixed(6)}, Lng: {event.location.lng.toFixed(6)}
                     </p>
                   </div>
@@ -207,12 +207,12 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
               {event.signalStrength && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-white/60">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Signal size={16} />
                     <span>Signal Strength</span>
                   </div>
-                  <div className="glass-dark p-3 rounded-md">
-                    <p className="text-white/90 font-mono">{event.signalStrength} dBm</p>
+                  <div className="glass p-3 rounded-md">
+                    <p className="text-foreground font-mono">{event.signalStrength} dBm</p>
                   </div>
                 </div>
               )}
@@ -221,54 +221,54 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
           {event.type === 'anomaly-detected' && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white/95 border-b border-white/20 pb-2">
+              <h3 className="text-lg font-semibold text-foreground border-b border-border pb-2">
                 Anomaly Details
               </h3>
               
               {event.anomalyType && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-white/60">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <AlertTriangle size={16} />
                     <span>Anomaly Type</span>
                   </div>
-                  <div className="glass-dark p-3 rounded-md">
-                    <p className="text-white/90">{event.anomalyType}</p>
+                  <div className="glass p-3 rounded-md">
+                    <p className="text-foreground">{event.anomalyType}</p>
                   </div>
                 </div>
               )}
 
               {event.band && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-white/60">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Radio size={16} />
                     <span>Frequency Band</span>
                   </div>
-                  <div className="glass-dark p-3 rounded-md">
-                    <p className="text-white/90 font-mono">{event.band}</p>
+                  <div className="glass p-3 rounded-md">
+                    <p className="text-foreground font-mono">{event.band}</p>
                   </div>
                 </div>
               )}
 
               {event.sourceId && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-white/60">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Database size={16} />
                     <span>Source ID</span>
                   </div>
-                  <div className="glass-dark p-3 rounded-md">
-                    <p className="text-white/90 font-mono">{event.sourceId}</p>
+                  <div className="glass p-3 rounded-md">
+                    <p className="text-foreground font-mono">{event.sourceId}</p>
                   </div>
                 </div>
               )}
 
               {event.recommendedFix && (
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-white/60">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Wrench size={16} />
                     <span>Recommended Fix</span>
                   </div>
-                  <div className="glass-dark p-4 rounded-md border border-blue-500/30 bg-blue-500/10">
-                    <p className="text-blue-200 leading-relaxed text-sm">{event.recommendedFix}</p>
+                  <div className="glass p-4 rounded-md border border-primary/30 bg-primary/10">
+                    <p className="text-primary-foreground leading-relaxed text-sm">{event.recommendedFix}</p>
                   </div>
                 </div>
               )}
@@ -277,17 +277,17 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
           {event.type === 'tower-up' && event.recoveryTime && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white/95 border-b border-white/20 pb-2">
+              <h3 className="text-lg font-semibold text-foreground border-b border-border pb-2">
                 Recovery Details
               </h3>
               
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-white/60">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <CheckCircle size={16} />
                   <span>Recovery Time</span>
                 </div>
-                <div className="glass-dark p-3 rounded-md">
-                  <p className="text-white/90">{event.recoveryTime} minutes</p>
+                <div className="glass p-3 rounded-md">
+                  <p className="text-foreground">{event.recoveryTime} minutes</p>
                 </div>
               </div>
             </div>
@@ -295,11 +295,11 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
           {/* Raw Event Data */}
           <details className="space-y-2">
-            <summary className="cursor-pointer text-sm text-white/60 hover:text-white/80 transition-colors">
+            <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground transition-colors">
               Technical Details (Raw Event Data)
             </summary>
-            <div className="glass-dark p-3 rounded-md mt-2">
-              <pre className="text-xs text-white/70 font-mono whitespace-pre-wrap overflow-x-auto">
+            <div className="glass p-3 rounded-md mt-2">
+              <pre className="text-xs text-muted-foreground font-mono whitespace-pre-wrap overflow-x-auto">
                 {JSON.stringify(event, null, 2)}
               </pre>
             </div>
