@@ -10,7 +10,7 @@ export function useAnomalyEvents() {
       return convertAnomaliesToEvents(anomalies);
     },
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 5000, // Refetch every 5 seconds
   });
 
   return {
