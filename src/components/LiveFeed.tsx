@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import { dbConfig } from '../config/dbConfig';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import EventDetailsDialog from './EventDetailsDialog';
 
 interface LiveFeedProps {
   events: Event[];
@@ -13,6 +14,8 @@ interface LiveFeedProps {
 
 const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
   const [selectedCell, setSelectedCell] = useState<string>('all');
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   // Get unique cell IDs from events for filter options
   const uniqueCellIds = Array.from(new Set(events.map(event => event.cellId).filter(Boolean))).sort();
@@ -47,7 +50,7 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
   };
 
   const getEventClassNames = (eventType: Event['type']) => {
-    const baseClasses = "flex items-start space-x-3 p-3 rounded-md mb-2 transition-all duration-300 glass hover:glass-hover backdrop-blur-sm";
+    const baseClasses = "flex items-start space-x-3 p-3 rounded-md mb-2 transition-all duration-300 glass hover:glass-hover backdrop-blur-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]";
     
     switch (eventType) {
       case 'tower-down':
@@ -126,6 +129,23 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
     return formatDistanceToNow(localDate, { addSuffix: true });
   };
 
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event);
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedEvent(null);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent, networkEvent: Event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleEventClick(networkEvent);
+    }
+  };
+
   return (
     <div className="glass-card p-4 glass-glow">
       <div className="flex justify-between items-center mb-4">
@@ -155,7 +175,15 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
           </div>
         ) : (
           filteredEvents.map((event, index) => (
-            <div key={index} className={getEventClassNames(event.type)}>
+            <div 
+              key={index} 
+              className={getEventClassNames(event.type)}
+              onClick={() => handleEventClick(event)}
+              onKeyDown={(e) => handleKeyDown(e, event)}
+              tabIndex={0}
+              role="button"
+              aria-label={`View details for ${getEventTitle(event)}`}
+            >
               <div className="p-2 glass rounded-md backdrop-blur-sm">
                 {getEventIcon(event.type)}
               </div>
@@ -209,6 +237,12 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
           ))
         )}
       </div>
+      
+      <EventDetailsDialog
+        event={selectedEvent}
+        isOpen={isDialogOpen}
+        onClose={closeDialog}
+      />
     </div>
   );
 };
