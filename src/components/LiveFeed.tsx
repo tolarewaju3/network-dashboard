@@ -194,7 +194,7 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
                     {formatEventTime(event.timestamp)}
                   </span>
                 </div>
-{event.message && (
+{event.message && event.type !== 'anomaly-detected' && (
                   <p className="text-sm text-white/80 mt-1">{event.message}</p>
                 )}
                 {(event.type === 'call-placed' || event.type === 'call-dropped') && event.location && event.signalStrength && (
