@@ -16,7 +16,7 @@ const isBrowser = typeof window !== 'undefined';
 
 // Default development configuration - update these values for your environment
 const defaultConfig: DbConfig = {
-  useMock: true, // Always use mock data now
+  useMock: false, // Default to JSON data instead of mock
   // Towers JSON defaults
   useTowersJson: true,
   towersJsonUrl: '/towers.json',
