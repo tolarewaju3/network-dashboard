@@ -102,25 +102,25 @@
 }
 
 @layer components {
-  /* Glass morphism utilities - theme aware */
+  /* Glass morphism utilities */
   .glass {
-    @apply backdrop-blur-md bg-background/10 border border-border/20 dark:bg-white/10 dark:border-white/20;
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
   }
   
   .glass-strong {
-    @apply backdrop-blur-lg bg-background/15 border border-border/30 dark:bg-white/15 dark:border-white/30;
+    @apply backdrop-blur-lg bg-white/15 border border-white/30;
   }
   
   .glass-dark {
-    @apply backdrop-blur-md bg-foreground/20 border border-border/10 dark:bg-black/20 dark:border-white/10;
+    @apply backdrop-blur-md bg-black/20 border border-white/10;
   }
   
   .glass-card {
-    @apply backdrop-blur-md bg-card/5 border border-border/10 rounded-lg shadow-xl dark:bg-white/5 dark:border-white/10;
+    @apply backdrop-blur-md bg-white/5 border border-white/10 rounded-lg shadow-xl;
   }
   
   .glass-hover {
-    @apply transition-all duration-300 hover:bg-accent/20 hover:border-border/40 hover:shadow-2xl dark:hover:bg-white/20 dark:hover:border-white/40;
+    @apply transition-all duration-300 hover:bg-white/20 hover:border-white/40 hover:shadow-2xl;
   }
   
   .stat-card {
@@ -140,10 +140,6 @@
   }
   
   .gradient-bg {
-    @apply bg-gradient-to-br from-background via-muted to-background;
-  }
-  
-  .gradient-bg-dark {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%);
   }
   

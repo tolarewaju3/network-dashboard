@@ -146,19 +146,19 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
     }
   };
 
-    return (
+  return (
     <div className="glass-card p-4 glass-glow">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-foreground drop-shadow-lg">Live Network Events</h2>
+        <h2 className="text-xl font-bold text-white/95 drop-shadow-lg">Live Network Events</h2>
         <div className="flex items-center gap-2">
           <Select value={selectedCell} onValueChange={setSelectedCell}>
-            <SelectTrigger className="w-40 glass border-border/20 text-foreground bg-background/5 backdrop-blur-md hover:bg-accent/10 transition-all">
+            <SelectTrigger className="w-40 glass border-white/20 text-white/90 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all">
               <SelectValue placeholder="All Cells" />
             </SelectTrigger>
-            <SelectContent className="bg-popover/95 border-border/30 backdrop-blur-lg">
-              <SelectItem value="all" className="text-foreground hover:bg-accent/20 focus:bg-accent/20">All Cells</SelectItem>
+            <SelectContent className="bg-gray-900/95 border-white/30 backdrop-blur-lg text-white">
+              <SelectItem value="all" className="text-white/90 hover:bg-white/20 focus:bg-white/20 focus:text-white">All Cells</SelectItem>
               {uniqueCellIds.map(cellId => (
-                <SelectItem key={cellId} value={cellId} className="text-foreground hover:bg-accent/20 focus:bg-accent/20">
+                <SelectItem key={cellId} value={cellId} className="text-white/90 hover:bg-white/20 focus:bg-white/20 focus:text-white">
                   {cellId}
                 </SelectItem>
               ))}
@@ -169,8 +169,8 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
       
       <div className="max-h-[400px] overflow-y-auto pr-2 glass-scrollbar">
         {filteredEvents.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <TowerControl size={40} className="mx-auto mb-3 text-muted-foreground/60" />
+          <div className="text-center py-8 text-white/60">
+            <TowerControl size={40} className="mx-auto mb-3 text-white/40" />
             <p>{selectedCell === 'all' ? 'No events recorded yet' : `No events for ${selectedCell}`}</p>
           </div>
         ) : (
@@ -189,21 +189,21 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
               </div>
               <div className="flex-1">
                 <div className="flex justify-between">
-                  <h3 className="font-medium text-foreground drop-shadow-sm">{getEventTitle(event)}</h3>
-                  <span className="text-xs text-muted-foreground">
+                  <h3 className="font-medium text-white/95 drop-shadow-sm">{getEventTitle(event)}</h3>
+                  <span className="text-xs text-white/60">
                     {formatEventTime(event.timestamp)}
                   </span>
                 </div>
 {event.message && event.type !== 'anomaly-detected' && (
-                  <p className="text-sm text-muted-foreground mt-1">{event.message}</p>
+                  <p className="text-sm text-white/80 mt-1">{event.message}</p>
                 )}
                 {(event.type === 'call-placed' || event.type === 'call-dropped') && event.location && event.signalStrength && (
                   <div className="space-y-1 mt-2">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-sm text-white/80">
                       <MapPin size={14} className="text-blue-400 drop-shadow-sm" />
                       <span>Location: {event.location.lat.toFixed(4)}, {event.location.lng.toFixed(4)}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-sm text-white/80">
                       <Signal size={14} className="text-green-400 drop-shadow-sm" />
                       <span>Signal: {event.signalStrength} dBm</span>
                     </div>
@@ -212,13 +212,13 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
                  {event.type === 'anomaly-detected' && (event.anomalyType || event.band) && (
                    <div className="space-y-1 mt-2">
                      {event.anomalyType && (
-                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                       <div className="flex items-center gap-2 text-sm text-white/80">
                          <AlertTriangle size={14} className="text-red-400 drop-shadow-sm" />
                          <span>Type: {event.anomalyType}</span>
                        </div>
                      )}
                      {event.band && (
-                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                       <div className="flex items-center gap-2 text-sm text-white/80">
                          <Signal size={14} className="text-orange-400 drop-shadow-sm" />
                          <span>Band: {event.band}</span>
                        </div>
@@ -227,7 +227,7 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
                  )}
                  <div className="flex flex-wrap gap-2 mt-2">
                   {event.cellId && (
-                    <div className="text-xs glass-dark px-2 py-1 rounded-sm text-muted-foreground backdrop-blur-sm">
+                    <div className="text-xs glass-dark px-2 py-1 rounded-sm text-white/80 backdrop-blur-sm">
                       Cell: {event.cellId}
                     </div>
                   )}
