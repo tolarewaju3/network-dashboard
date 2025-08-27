@@ -3,6 +3,7 @@ import { useState } from "react";
 import MapView from "../components/MapView";
 import LiveFeed from "../components/LiveFeed";
 import StatusHeader from "../components/StatusHeader";
+import RanChatBox from "../components/RanChatBox";
 
 import { useCallRecords } from "../hooks/useCallRecords";
 import { useRemediationEvents } from "../hooks/useRemediationEvents";
@@ -74,6 +75,11 @@ const Index = () => {
             <div className="md:col-span-1">
               <LiveFeed events={allEvents} />
             </div>
+          </div>
+          
+          {/* RAN AI Chat Section */}
+          <div className="mt-6">
+            <RanChatBox />
           </div>
         </main>
       </div>
