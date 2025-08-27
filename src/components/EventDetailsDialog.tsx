@@ -22,7 +22,8 @@ import {
   Calendar,
   Smartphone,
   Radio,
-  Database
+  Database,
+  Wrench
 } from 'lucide-react';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Badge } from './ui/badge';
@@ -268,6 +269,18 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
                   </div>
                   <div className="glass-dark p-3 rounded-md">
                     <p className="text-white/90 font-mono">{event.sourceId}</p>
+                  </div>
+                </div>
+              )}
+
+              {event.recommendedFix && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-white/60">
+                    <Wrench size={16} />
+                    <span>Recommended Fix</span>
+                  </div>
+                  <div className="glass-dark p-4 rounded-md border border-blue-500/30 bg-blue-500/10">
+                    <p className="text-blue-200 leading-relaxed text-sm">{event.recommendedFix}</p>
                   </div>
                 </div>
               )}

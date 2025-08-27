@@ -9,6 +9,7 @@ interface AnomalyRecord {
   anomaly: string;
   source_id: string;
   creation_date: string;
+  recommended_fix?: string;
 }
 
 interface ProcessedAnomaly {
@@ -123,7 +124,8 @@ export function convertAnomaliesToEvents(anomalies: AnomalyRecord[]): Event[] {
       // Add anomaly-specific data
       anomalyType: anomaly.anomaly_type,
       band: anomaly.band,
-      sourceId: anomaly.source_id
+      sourceId: anomaly.source_id,
+      recommendedFix: anomaly.recommended_fix
     };
   });
 }

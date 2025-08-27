@@ -40,6 +40,7 @@ export interface Event {
   anomalyType?: string; // Add anomaly type for anomaly events
   band?: string; // Add band for anomaly events
   sourceId?: string; // Add source ID for anomaly events
+  recommendedFix?: string; // Add recommended fix for anomaly events
 }
 
 export interface CallRecord {
