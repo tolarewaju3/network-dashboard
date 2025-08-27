@@ -35,7 +35,7 @@ export const useChatAPI = (): UseChatAPIReturn => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://ranchat-ai-cloud-ran-genai.apps.acmhub.dinesh154.dfw.ocp.run/api/query', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
