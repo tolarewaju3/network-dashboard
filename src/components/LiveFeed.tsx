@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Event } from '../types/network';
 import { Bell, BellOff, Phone, TowerControl, ArrowUp, ArrowDown, Database, Settings, CheckCircle, MapPin, Signal, AlertTriangle } from 'lucide-react';
@@ -7,23 +6,21 @@ import { toZonedTime } from 'date-fns-tz';
 import { dbConfig } from '../config/dbConfig';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import EventDetailsDialog from './EventDetailsDialog';
-
 interface LiveFeedProps {
   events: Event[];
 }
-
-const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
+const LiveFeed: React.FC<LiveFeedProps> = ({
+  events
+}) => {
   const [selectedCell, setSelectedCell] = useState<string>('all');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  
+
   // Get unique cell IDs from events for filter options
   const uniqueCellIds = Array.from(new Set(events.map(event => event.cellId).filter(Boolean))).sort();
-  
+
   // Filter events based on selected cell
-  const filteredEvents = selectedCell === 'all' 
-    ? events 
-    : events.filter(event => event.cellId === selectedCell);
+  const filteredEvents = selectedCell === 'all' ? events : events.filter(event => event.cellId === selectedCell);
   const getEventIcon = (eventType: Event['type']) => {
     switch (eventType) {
       case 'call-placed':
@@ -48,10 +45,8 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
         return <TowerControl size={20} className="text-gray-400" />;
     }
   };
-
   const getEventClassNames = (eventType: Event['type']) => {
     const baseClasses = "flex items-start space-x-3 p-3 rounded-md mb-2 transition-all duration-300 glass hover:glass-hover backdrop-blur-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]";
-    
     switch (eventType) {
       case 'tower-down':
         return `${baseClasses} bg-red-500/10 border border-red-400/30 hover:bg-red-500/20`;
@@ -73,7 +68,6 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
         return `${baseClasses} bg-white/5 border border-white/20 hover:bg-white/10`;
     }
   };
-
   const getEventTitle = (event: Event) => {
     switch (event.type) {
       case 'call-placed':
@@ -112,7 +106,7 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
   const formatEventTime = (date: Date) => {
     // Make sure we're working with a valid Date object
     const eventDate = new Date(date);
-    
+
     // Validate the date isn't invalid or in the future
     const now = new Date();
     if (isNaN(eventDate.getTime())) {
@@ -121,35 +115,32 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
     if (eventDate > now) {
       return 'Future event';
     }
-    
+
     // Convert to local timezone for display
     const localDate = toZonedTime(eventDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
-    
-    // Use formatDistanceToNow which handles the relative time conversion
-    return formatDistanceToNow(localDate, { addSuffix: true });
-  };
 
+    // Use formatDistanceToNow which handles the relative time conversion
+    return formatDistanceToNow(localDate, {
+      addSuffix: true
+    });
+  };
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
     setIsDialogOpen(true);
   };
-
   const closeDialog = () => {
     setIsDialogOpen(false);
     setSelectedEvent(null);
   };
-
   const handleKeyDown = (event: React.KeyboardEvent, networkEvent: Event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleEventClick(networkEvent);
     }
   };
-
-  return (
-    <div className="glass-card p-4 glass-glow">
+  return <div className="glass-card p-4 glass-glow">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-foreground drop-shadow-lg">Live Network Events</h2>
+        <h2 className="text-xl font-bold text-foreground drop-shadow-lg">Live Events</h2>
         <div className="flex items-center gap-2">
           <Select value={selectedCell} onValueChange={setSelectedCell}>
             <SelectTrigger className="w-40 glass border-border text-foreground bg-card/50 backdrop-blur-md hover:bg-card/80 transition-all">
@@ -157,33 +148,19 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
             </SelectTrigger>
             <SelectContent className="bg-card/95 border-border backdrop-blur-lg text-foreground">
               <SelectItem value="all" className="text-foreground hover:bg-muted focus:bg-muted focus:text-foreground">All Cells</SelectItem>
-              {uniqueCellIds.map(cellId => (
-                <SelectItem key={cellId} value={cellId} className="text-foreground hover:bg-muted focus:bg-muted focus:text-foreground">
+              {uniqueCellIds.map(cellId => <SelectItem key={cellId} value={cellId} className="text-foreground hover:bg-muted focus:bg-muted focus:text-foreground">
                   {cellId}
-                </SelectItem>
-              ))}
+                </SelectItem>)}
             </SelectContent>
           </Select>
         </div>
       </div>
       
       <div className="max-h-[400px] overflow-y-auto pr-2 glass-scrollbar">
-        {filteredEvents.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
+        {filteredEvents.length === 0 ? <div className="text-center py-8 text-muted-foreground">
             <TowerControl size={40} className="mx-auto mb-3 text-muted-foreground/60" />
             <p>{selectedCell === 'all' ? 'No events recorded yet' : `No events for ${selectedCell}`}</p>
-          </div>
-        ) : (
-          filteredEvents.map((event, index) => (
-            <div 
-              key={index} 
-              className={getEventClassNames(event.type)}
-              onClick={() => handleEventClick(event)}
-              onKeyDown={(e) => handleKeyDown(e, event)}
-              tabIndex={0}
-              role="button"
-              aria-label={`View details for ${getEventTitle(event)}`}
-            >
+          </div> : filteredEvents.map((event, index) => <div key={index} className={getEventClassNames(event.type)} onClick={() => handleEventClick(event)} onKeyDown={e => handleKeyDown(e, event)} tabIndex={0} role="button" aria-label={`View details for ${getEventTitle(event)}`}>
               <div className="p-2 glass rounded-md backdrop-blur-sm">
                 {getEventIcon(event.type)}
               </div>
@@ -194,11 +171,8 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
                     {formatEventTime(event.timestamp)}
                   </span>
                 </div>
-{event.message && event.type !== 'anomaly-detected' && (
-                  <p className="text-sm text-foreground/80 mt-1">{event.message}</p>
-                )}
-                {(event.type === 'call-placed' || event.type === 'call-dropped') && event.location && event.signalStrength && (
-                  <div className="space-y-1 mt-2">
+          {event.message && event.type !== 'anomaly-detected' && <p className="text-sm text-foreground/80 mt-1">{event.message}</p>}
+                {(event.type === 'call-placed' || event.type === 'call-dropped') && event.location && event.signalStrength && <div className="space-y-1 mt-2">
                     <div className="flex items-center gap-2 text-sm text-foreground/80">
                       <MapPin size={14} className="text-blue-400 drop-shadow-sm" />
                       <span>Location: {event.location.lat.toFixed(4)}, {event.location.lng.toFixed(4)}</span>
@@ -207,44 +181,27 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
                       <Signal size={14} className="text-green-400 drop-shadow-sm" />
                       <span>Signal: {event.signalStrength} dBm</span>
                     </div>
-                  </div>
-                 )}
-                 {event.type === 'anomaly-detected' && (event.anomalyType || event.band) && (
-                   <div className="space-y-1 mt-2">
-                     {event.anomalyType && (
-                       <div className="flex items-center gap-2 text-sm text-foreground/80">
+                  </div>}
+                 {event.type === 'anomaly-detected' && (event.anomalyType || event.band) && <div className="space-y-1 mt-2">
+                     {event.anomalyType && <div className="flex items-center gap-2 text-sm text-foreground/80">
                          <AlertTriangle size={14} className="text-red-400 drop-shadow-sm" />
                          <span>Type: {event.anomalyType}</span>
-                       </div>
-                     )}
-                     {event.band && (
-                       <div className="flex items-center gap-2 text-sm text-foreground/80">
+                       </div>}
+                     {event.band && <div className="flex items-center gap-2 text-sm text-foreground/80">
                          <Signal size={14} className="text-orange-400 drop-shadow-sm" />
                          <span>Band: {event.band}</span>
-                       </div>
-                     )}
-                   </div>
-                 )}
+                       </div>}
+                   </div>}
                  <div className="flex flex-wrap gap-2 mt-2">
-                  {event.cellId && (
-                    <div className="text-xs glass-dark px-2 py-1 rounded-sm text-foreground/80 backdrop-blur-sm">
+                  {event.cellId && <div className="text-xs glass-dark px-2 py-1 rounded-sm text-foreground/80 backdrop-blur-sm">
                       Cell: {event.cellId}
-                    </div>
-                  )}
+                    </div>}
                 </div>
               </div>
-            </div>
-          ))
-        )}
+            </div>)}
       </div>
       
-      <EventDetailsDialog
-        event={selectedEvent}
-        isOpen={isDialogOpen}
-        onClose={closeDialog}
-      />
-    </div>
-  );
+      <EventDetailsDialog event={selectedEvent} isOpen={isDialogOpen} onClose={closeDialog} />
+    </div>;
 };
-
 export default LiveFeed;
