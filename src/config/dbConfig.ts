@@ -23,7 +23,7 @@ const defaultConfig: DbConfig = {
   towersJsonPollMs: 15000,
   // Anomalies JSON defaults
   useAnomaliesJson: true,
-  anomaliesJsonUrl: '',
+  anomaliesJsonUrl: 'https://anomaly-parser-ai-cloud-ran-genai.apps.acmhub.dinesh154.dfw.ocp.run/anomalies.json',
   anomaliesJsonPollMs: 30000,
 };
 
