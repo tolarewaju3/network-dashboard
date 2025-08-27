@@ -35,7 +35,19 @@ export async function fetchAnomalies(): Promise<AnomalyRecord[]> {
       if (!response.ok) {
         throw new Error(`Failed to fetch anomalies: ${response.statusText}`);
       }
+      
+      // Check if response is actually JSON by looking at content-type or trying to parse
+      const contentType = response.headers.get('content-type');
+      if (contentType && !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON format');
+      }
+      
       const data = await response.json();
+      // Validate that it's an array (expected format)
+      if (!Array.isArray(data)) {
+        throw new Error('Response is not an array of anomalies');
+      }
+      
       return data;
     } catch (error) {
       console.error('Error fetching anomalies from primary URL:', error);
