@@ -1,5 +1,6 @@
 import { Tower } from "../types/network";
 import { Progress } from "@/components/ui/progress";
+import AnomalySourceToggle from "./AnomalySourceToggle";
 interface ProcessedAnomaly {
   cellId: string;
   count: number;
@@ -85,6 +86,8 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
             <div className="text-white/70 text-sm font-medium">w/ Anomalies</div>
             <div className="text-2xl font-bold text-red-400 drop-shadow-md">{towersWithAnomalies}</div>
           </div>
+
+          <AnomalySourceToggle />
         </div>
       </div>
     </header>;
