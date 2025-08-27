@@ -112,7 +112,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl glass-card border-white/20 text-white">
+      <DialogContent className="max-w-2xl glass-card border-white/20 text-white !bg-transparent">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-xl text-white/95">
             <div className="p-2 glass rounded-md backdrop-blur-sm">
