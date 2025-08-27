@@ -112,15 +112,15 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto glass-card border-white/20 text-white !bg-transparent">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto glass-card border-border text-foreground !bg-transparent">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-3 text-xl text-white/95">
+          <DialogTitle className="flex items-center gap-3 text-xl text-foreground">
             <div className="p-2 glass rounded-md backdrop-blur-sm">
               {getEventIcon(event.type)}
             </div>
             {getEventTitle(event)}
           </DialogTitle>
-          <DialogDescription className="text-white/70">
+          <DialogDescription className="text-muted-foreground">
             Detailed information about this network event
           </DialogDescription>
         </DialogHeader>
@@ -130,22 +130,22 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-white/60">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar size={16} />
                   <span>Timestamp</span>
                 </div>
                 <div className="glass-dark p-3 rounded-md">
-                  <p className="text-white/90 font-medium">
+                  <p className="text-foreground font-medium">
                     {format(new Date(event.timestamp), 'PPpp')}
                   </p>
-                  <p className="text-white/60 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     {formatDistanceToNow(new Date(event.timestamp), { addSuffix: true })}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-white/60">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Database size={16} />
                   <span>Event Type</span>
                 </div>
@@ -160,12 +160,12 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
             {/* Cell Information */}
             {event.cellId && (
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-white/60">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <TowerControl size={16} />
                   <span>Cell ID</span>
                 </div>
                 <div className="glass-dark p-3 rounded-md">
-                  <p className="text-white/90 font-mono">{event.cellId}</p>
+                  <p className="text-foreground font-mono">{event.cellId}</p>
                 </div>
               </div>
             )}
@@ -173,12 +173,12 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
             {/* Message */}
             {event.message && (
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-white/60">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <AlertTriangle size={16} />
                   <span>Message</span>
                 </div>
                 <div className="glass-dark p-3 rounded-md">
-                  <p className="text-white/90">{event.message}</p>
+                  <p className="text-foreground">{event.message}</p>
                 </div>
               </div>
             )}
@@ -187,7 +187,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
           {/* Event-Specific Details */}
           {(event.type === 'call-placed' || event.type === 'call-dropped') && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white/95 border-b border-white/20 pb-2">
+              <h3 className="text-lg font-semibold text-foreground border-b border-border pb-2">
                 Call Details
               </h3>
               

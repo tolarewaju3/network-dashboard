@@ -102,25 +102,40 @@
 }
 
 @layer components {
-  /* Glass morphism utilities */
+  /* Theme-aware glass morphism utilities */
   .glass {
-    @apply backdrop-blur-md bg-white/10 border border-white/20;
+    @apply backdrop-blur-md border transition-all duration-300;
+    @apply bg-white/10 border-white/20;
+    @apply dark:bg-white/10 dark:border-white/20;
+    @apply light:bg-black/5 light:border-black/15;
   }
   
   .glass-strong {
-    @apply backdrop-blur-lg bg-white/15 border border-white/30;
+    @apply backdrop-blur-lg border transition-all duration-300;
+    @apply bg-white/15 border-white/30;
+    @apply dark:bg-white/15 dark:border-white/30;
+    @apply light:bg-black/8 light:border-black/20;
   }
   
   .glass-dark {
-    @apply backdrop-blur-md bg-black/20 border border-white/10;
+    @apply backdrop-blur-md border transition-all duration-300;
+    @apply bg-black/20 border-white/10;
+    @apply dark:bg-black/20 dark:border-white/10;
+    @apply light:bg-white/60 light:border-black/10;
   }
   
   .glass-card {
-    @apply backdrop-blur-md bg-white/5 border border-white/10 rounded-lg shadow-xl;
+    @apply backdrop-blur-md border rounded-lg shadow-xl transition-all duration-300;
+    @apply bg-white/5 border-white/10;
+    @apply dark:bg-white/5 dark:border-white/10;
+    @apply light:bg-white/60 light:border-black/10;
   }
   
   .glass-hover {
-    @apply transition-all duration-300 hover:bg-white/20 hover:border-white/40 hover:shadow-2xl;
+    @apply transition-all duration-300 hover:shadow-2xl;
+    @apply hover:bg-white/20 hover:border-white/40;
+    @apply dark:hover:bg-white/20 dark:hover:border-white/40;
+    @apply light:hover:bg-white/80 light:hover:border-black/20;
   }
   
   .stat-card {
@@ -132,23 +147,39 @@
   }
   
   .glass-scrollbar::-webkit-scrollbar-track {
-    @apply bg-white/5 rounded-full backdrop-blur-sm;
+    @apply rounded-full backdrop-blur-sm transition-all duration-300;
+    @apply bg-white/5;
+    @apply dark:bg-white/5;
+    @apply light:bg-black/5;
   }
   
   .glass-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-white/20 rounded-full hover:bg-white/30 backdrop-blur-sm;
+    @apply rounded-full backdrop-blur-sm transition-all duration-300;
+    @apply bg-white/20 hover:bg-white/30;
+    @apply dark:bg-white/20 dark:hover:bg-white/30;
+    @apply light:bg-black/20 light:hover:bg-black/30;
   }
   
-  .gradient-bg {
+  .theme-bg {
+    @apply transition-all duration-300;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%);
   }
   
+  .light .theme-bg {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%);
+  }
+  
   .glass-glow {
+    @apply transition-all duration-300;
     box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .light .glass-glow {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 }
 
-/* Mapbox popup styles */
+/* Theme-aware Mapbox popup styles */
 .mapboxgl-popup-content {
   background-color: rgba(31, 41, 55, 0.95) !important;
   color: white !important;
@@ -157,12 +188,25 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   font-family: inherit !important;
+  transition: all 0.3s ease !important;
+}
+
+.light .mapboxgl-popup-content {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #1f2937 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 .mapboxgl-popup-close-button {
   color: rgba(255, 255, 255, 0.7) !important;
   font-size: 16px !important;
   padding: 5px 10px !important;
+  transition: all 0.3s ease !important;
+}
+
+.light .mapboxgl-popup-close-button {
+  color: rgba(31, 41, 55, 0.7) !important;
 }
 
 .mapboxgl-popup-close-button:hover {
@@ -170,8 +214,18 @@
   background: transparent !important;
 }
 
+.light .mapboxgl-popup-close-button:hover {
+  color: #1f2937 !important;
+}
+
 .mapboxgl-popup-tip {
   border-top-color: rgba(31, 41, 55, 0.95) !important;
   border-bottom-color: rgba(31, 41, 55, 0.95) !important;
+  transition: all 0.3s ease !important;
+}
+
+.light .mapboxgl-popup-tip {
+  border-top-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.95) !important;
 }
 

@@ -31,7 +31,7 @@ const Index = () => {
 
   if (isError) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
+      <div className="min-h-screen bg-background text-foreground p-8">
         <Alert variant="destructive">
           <CircleAlert className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
@@ -44,7 +44,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen gradient-bg text-white relative overflow-hidden">
+    <div className="min-h-screen theme-bg text-foreground relative overflow-hidden">
       {/* Background elements for depth */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
@@ -65,7 +65,7 @@ const Index = () => {
                 <div className="absolute inset-0 flex items-center justify-center glass-dark rounded-lg">
                   <div className="text-center">
                     <div className="spinner h-8 w-8 rounded-full border-4 border-t-blue-400 border-b-blue-600 border-l-blue-500 border-r-blue-500 animate-spin mx-auto mb-4"></div>
-                    <p className="text-white/90">Loading tower data...</p>
+                    <p className="text-foreground/90">Loading tower data...</p>
                   </div>
                 </div>
               )}
