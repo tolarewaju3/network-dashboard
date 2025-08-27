@@ -35,19 +35,39 @@ export const useChatAPI = (): UseChatAPIReturn => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      console.log('Attempting to send message:', query);
+      
+      // Try direct API call without Content-Type header to avoid CORS preflight
+      const response = await fetch('https://ranchat-ai-cloud-ran-genai.apps.acmhub.dinesh154.dfw.ocp.run/api/query', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        mode: 'cors',
         body: JSON.stringify({ query }),
       });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.text();
+      const contentType = response.headers.get('content-type');
+      console.log('Content-Type:', contentType);
+      
+      let data;
+      if (contentType && contentType.includes('application/json')) {
+        const jsonData = await response.json();
+        data = jsonData.response || jsonData.answer || JSON.stringify(jsonData);
+      } else {
+        data = await response.text();
+      }
+      
+      console.log('API Response:', data);
+
+      // Check if we got HTML instead of API response
+      if (data.includes('<!DOCTYPE html>')) {
+        throw new Error('Received HTML instead of API response - proxy not working');
+      }
       
       // Add AI response
       const aiMessage: ChatMessage = {
@@ -60,11 +80,52 @@ export const useChatAPI = (): UseChatAPIReturn => {
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error('Chat API error:', error);
+      
+      // Try fallback with different approach
+      try {
+        console.log('Trying fallback approach...');
+        const fallbackResponse = await fetch('https://ranchat-ai-cloud-ran-genai.apps.acmhub.dinesh154.dfw.ocp.run/api/query', {
+          method: 'POST',
+          headers: {
+            'Accept': 'text/plain, */*',
+          },
+          body: query, // Send as plain text
+        });
+
+        if (fallbackResponse.ok) {
+          const fallbackData = await fallbackResponse.text();
+          
+          if (!fallbackData.includes('<!DOCTYPE html>')) {
+            const aiMessage: ChatMessage = {
+              id: (Date.now() + 1).toString(),
+              type: 'ai',
+              content: fallbackData,
+              timestamp: new Date(),
+            };
+            setMessages(prev => [...prev, aiMessage]);
+            return;
+          }
+        }
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError);
+      }
+
+      // Show detailed error message
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Connection Error",
-        description: "Failed to connect to RAN AI. Please try again.",
+        description: `Failed to connect to RAN AI: ${errorMessage}. Check browser console for details.`,
         variant: "destructive",
       });
+      
+      // Add error message to chat
+      const errorChatMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: `⚠️ Connection Error: Unable to reach RAN AI service. This might be due to:\n\n1. CORS restrictions from the API server\n2. Network connectivity issues\n3. API server being unavailable\n\nError details: ${errorMessage}`,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorChatMessage]);
     } finally {
       setIsLoading(false);
     }
