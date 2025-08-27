@@ -82,7 +82,7 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
               ) : (
                 <>
                   <CheckCircle size={14} />
-                  Remote API
+                  Live
                 </>
               )}
             </Badge>
