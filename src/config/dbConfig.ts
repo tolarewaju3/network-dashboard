@@ -19,7 +19,7 @@ const defaultConfig: DbConfig = {
   useMock: true, // Always use mock data now
   // Towers JSON defaults
   useTowersJson: true,
-  towersJsonUrl: '',
+  towersJsonUrl: '/towers.json',
   towersJsonPollMs: 15000,
   // Anomalies JSON defaults
   useAnomaliesJson: true,

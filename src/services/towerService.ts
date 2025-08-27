@@ -7,7 +7,7 @@ async function loadTowersFromJson(): Promise<Tower[]> {
   try {
     // Check for custom URL in localStorage first, then config, then default
     const customUrl = typeof window !== 'undefined' ? localStorage.getItem('custom-json-url') : null;
-    const url = customUrl || dbConfig.towersJsonUrl || '/towers.json';
+    const url = customUrl || dbConfig.towersJsonUrl;
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to fetch towers JSON: ${res.status}`);
     const json = await res.json();
