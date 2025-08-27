@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Event } from '../types/network';
 import { Bell, BellOff, Phone, TowerControl, ArrowUp, ArrowDown, Database, Settings, CheckCircle, MapPin, Signal, AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import { dbConfig } from '../config/dbConfig';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
@@ -109,8 +110,20 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ events }) => {
     // Make sure we're working with a valid Date object
     const eventDate = new Date(date);
     
+    // Validate the date isn't invalid or in the future
+    const now = new Date();
+    if (isNaN(eventDate.getTime())) {
+      return 'Invalid date';
+    }
+    if (eventDate > now) {
+      return 'Future event';
+    }
+    
+    // Convert to local timezone for display
+    const localDate = toZonedTime(eventDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
+    
     // Use formatDistanceToNow which handles the relative time conversion
-    return formatDistanceToNow(eventDate, { addSuffix: true });
+    return formatDistanceToNow(localDate, { addSuffix: true });
   };
 
   return (

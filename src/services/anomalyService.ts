@@ -91,17 +91,41 @@ export function getAnomalyInfo(cellId: string, anomalyMap: Map<string, Processed
 
 // Convert anomaly records to events for LiveFeed
 export function convertAnomaliesToEvents(anomalies: AnomalyRecord[]): Event[] {
-  return anomalies.map(anomaly => ({
-    type: "anomaly-detected" as const,
-    timestamp: new Date(anomaly.creation_date),
-    message: `${anomaly.anomaly_type}: ${anomaly.anomaly}`,
-    towerId: anomaly.cell_id,
-    cellId: anomaly.cell_id.toString(),
-    // Add anomaly-specific data
-    anomalyType: anomaly.anomaly_type,
-    band: anomaly.band,
-    sourceId: anomaly.source_id
-  }));
+  return anomalies.map(anomaly => {
+    // Parse timestamp as UTC and convert to local time
+    let timestamp: Date;
+    try {
+      // If the timestamp ends with 'Z', it's already UTC
+      if (anomaly.creation_date.endsWith('Z')) {
+        timestamp = new Date(anomaly.creation_date);
+      } else {
+        // Assume it's UTC if no timezone info
+        timestamp = new Date(anomaly.creation_date + 'Z');
+      }
+      
+      // Validate the timestamp isn't in the future
+      const now = new Date();
+      if (timestamp > now) {
+        console.warn('Anomaly timestamp is in the future, using current time:', anomaly.creation_date);
+        timestamp = now;
+      }
+    } catch (error) {
+      console.error('Invalid timestamp format:', anomaly.creation_date, error);
+      timestamp = new Date(); // Use current time as fallback
+    }
+    
+    return {
+      type: "anomaly-detected" as const,
+      timestamp,
+      message: `${anomaly.anomaly_type}: ${anomaly.anomaly}`,
+      towerId: anomaly.cell_id,
+      cellId: anomaly.cell_id.toString(),
+      // Add anomaly-specific data
+      anomalyType: anomaly.anomaly_type,
+      band: anomaly.band,
+      sourceId: anomaly.source_id
+    };
+  });
 }
 
 // Clear cache when needed
