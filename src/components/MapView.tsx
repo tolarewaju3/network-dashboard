@@ -19,8 +19,52 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
   const { anomalies } = useAnomalies();
   const { theme, resolvedTheme } = useTheme();
 
+  // Calculate bounds from towers data
+  const calculateTowerBounds = (towers: Tower[]) => {
+    if (towers.length === 0) {
+      // Fallback to Dallas-Fort Worth area if no towers
+      return {
+        center: [-96.85, 33.05] as [number, number],
+        zoom: 10
+      };
+    }
+
+    const lats = towers.map(tower => tower.lat);
+    const lngs = towers.map(tower => tower.lng);
+    
+    const bounds = {
+      north: Math.max(...lats),
+      south: Math.min(...lats),
+      east: Math.max(...lngs),
+      west: Math.min(...lngs)
+    };
+
+    const center: [number, number] = [
+      (bounds.west + bounds.east) / 2,
+      (bounds.south + bounds.north) / 2
+    ];
+
+    // Calculate zoom level based on the span of coordinates
+    const latSpan = bounds.north - bounds.south;
+    const lngSpan = bounds.east - bounds.west;
+    const maxSpan = Math.max(latSpan, lngSpan);
+    
+    // Zoom level calculation: smaller spans need higher zoom
+    let zoom = 10;
+    if (maxSpan < 0.1) zoom = 13;
+    else if (maxSpan < 0.3) zoom = 11;
+    else if (maxSpan < 0.7) zoom = 10;
+    else if (maxSpan < 1.5) zoom = 9;
+    else zoom = 8;
+
+    return { center, zoom };
+  };
+
   useEffect(() => {
     if (!mapContainer.current || !mapboxToken) return;
+
+    // Calculate initial map view based on towers
+    const { center, zoom } = calculateTowerBounds(towers);
 
     // Initialize map
     mapboxgl.accessToken = mapboxToken;
@@ -28,8 +72,8 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: resolvedTheme === 'light' ? 'mapbox://styles/mapbox/light-v11' : 'mapbox://styles/mapbox/dark-v11',
-      center: [-98.5795, 39.8283], // Center of the US
-      zoom: 3,
+      center: center,
+      zoom: zoom,
     });
 
     // Add navigation controls
@@ -73,7 +117,21 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
         document.head.removeChild(styleElement);
       }
     };
-  }, [mapboxToken]);
+  }, [mapboxToken, towers]);
+
+  // Fit map to towers bounds when towers data changes
+  useEffect(() => {
+    if (!map.current || towers.length === 0) return;
+
+    const { center, zoom } = calculateTowerBounds(towers);
+    
+    // Smoothly animate to the new view
+    map.current.easeTo({
+      center: center,
+      zoom: zoom,
+      duration: 1000
+    });
+  }, [towers]);
 
   // Update map style when theme changes
   useEffect(() => {
