@@ -268,7 +268,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
                     <span>Recommended Fix</span>
                   </div>
                   <div className="glass p-4 rounded-md border border-primary/30 bg-primary/10">
-                    <p className="text-primary-foreground leading-relaxed text-sm">{event.recommendedFix}</p>
+                    <p className="text-foreground leading-relaxed text-sm">{event.recommendedFix}</p>
                   </div>
                 </div>
               )}
