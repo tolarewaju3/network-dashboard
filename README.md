@@ -67,7 +67,7 @@ src/
 
 ## 🚀 Deployment on OpenShift
 
-## 1. Deploy the Anomaly Parser
+### 1. Deploy the Anomaly Parser
 The anomaly parser must be deployed first, as it provides the real-time anomaly data consumed by the dashboard.  
 
 Apply the parser manifests:
@@ -79,14 +79,14 @@ oc apply -f anomaly-parser/manifest/deployment.yml \
 
 This will expose the anomaly service through an OpenShift route.
 
-## 2. Configure Environment Variables
+### 2. Configure Environment Variables
 Before deploying the dashboard, configure the following variables in your OpenShift environment or DeploymentConfig:
 
 - **`VITE_MAPBOX_TOKEN`** – Your Mapbox access token (required for the interactive map).
 - **`VITE_ANOMALIES_URL`** – The external URL of your anomaly parser service (from the route you deployed in step 1).
 - **`VITE_API_BASE_URL`** – (Optional) Base URL for any additional APIs.
 
-## 3. Build and Deploy the Dashboard
+### 3. Build and Deploy the Dashboard
 Build and push the dashboard image:
 ```bash
 # Build and tag the image
@@ -103,10 +103,17 @@ oc new-app <registry-url>/network-dashboard:latest \
   -e VITE_ANOMALIES_URL=<your-anomalies-service-url>
 ```
 
-## 4. Expose the Dashboard
+### 4. Expose the Dashboard
 Create a route so the dashboard is accessible externally:
 ```bash
 oc expose svc/network-dashboard
+```
+
+### 5. View the Dashboard
+Navigate to the url of route. It should look something like this
+
+`https://network-dashboard-ui-ai-cloud-ran-genai.apps.ocphub.user154/`
+
 ```
 
 Your dashboard will now be available via the OpenShift route.  
