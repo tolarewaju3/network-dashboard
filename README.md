@@ -95,7 +95,9 @@ docker push <registry-url>/network-dashboard:latest
 ```
 Or, if you'd like to use my image, it's here:
 
-`quay.io/tolarewa/network-dashboard-ui`
+```
+quay.io/tolarewa/network-dashboard-ui
+```
 
 Deploy the image to OpenShift:
 ```bash
@@ -112,9 +114,11 @@ oc expose svc/network-dashboard
 ```
 
 ### 5. View the Dashboard
-Navigate to the url of route. It should look something like this
+Navigate to the url of route. It should look something like this:
 
-`https://network-dashboard-ui-ai-cloud-ran-genai.apps.ocphub.user154/`
+```
+https://network-dashboard-ui-ai-cloud-ran-genai.apps.ocphub.user154/
+```
 
 Your dashboard will now be available via the OpenShift route.  
 
