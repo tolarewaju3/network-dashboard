@@ -8,11 +8,9 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 - **Real-time Tower Visualization**: Interactive map displaying cell tower locations with status indicators
 - **Multi-status Support**: Visual indicators for tower status (online/offline), anomalies, and performance metrics
 - **Detailed Tower Information**: Click on any tower to view comprehensive details including:
-  - Frequency bands supported
-  - Signal strength and capacity
-  - Drop rates and performance metrics
-  - Adjacent cell information
   - Anomaly alerts and recommendations
+  - Frequency bands supported
+  - Adjacent cell information
 
 ### 📊 Live Event Monitoring
 - **Real-time Event Feed**: Live stream of network events including:
@@ -37,12 +35,9 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 
 ### Technology Stack
 - **Frontend**: React 18 with TypeScript
-- **Build Tool**: Vite with SWC for fast compilation
 - **Styling**: Tailwind CSS with shadcn/ui component library
 - **State Management**: React Query (TanStack Query) for server state
-- **Routing**: React Router v6
-- **Mapping**: Mapbox GL JS for interactive maps
-- **Themes**: Next.js themes for dark/light mode
+- **Maps**: Mapbox GL JS for interactive maps
 - **Data Fetching**: Native fetch API with fallback mechanisms
 
 ### Project Structure
@@ -70,19 +65,12 @@ src/
 └── pages/              # Route components
 ```
 
-### Data Flow
-1. **Data Sources**: Multiple data sources including JSON files and external APIs
-2. **Service Layer**: Dedicated services handle data fetching, processing, and caching
-3. **Custom Hooks**: React hooks manage component state and data subscriptions
-4. **Component Layer**: React components consume data through hooks
-5. **UI Updates**: Real-time updates through polling and state management
-
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+ and npm
+- Mapbox account for map visualization
 - (Optional) Docker for containerized deployment
-- (Optional) Mapbox account for enhanced map features
 
 ### Installation
 
@@ -125,12 +113,6 @@ docker build -t network-dashboard .
 # Run the container
 docker run -p 8080:8080 network-dashboard
 ```
-
-### Docker Configuration
-- **Base Images**: Multi-stage build using Node.js 18 and Nginx Alpine
-- **Security**: Runs as non-root user (UID 1001)
-- **Port**: Exposes port 8080
-- **Nginx**: Custom configuration for SPA routing and performance
 
 ## ⚙️ Configuration
 
@@ -218,12 +200,6 @@ interface Event {
 - Ensure Docker daemon is running
 - Check port conflicts (default: 8080)
 - Verify file permissions for volume mounts
-
-### Performance Optimization
-- Enable browser caching for static assets
-- Use production builds for deployment
-- Configure CDN for better global performance
-- Monitor bundle size and code splitting opportunities
 
 ---
 
