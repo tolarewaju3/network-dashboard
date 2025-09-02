@@ -65,54 +65,51 @@ src/
 └── pages/              # Route components
 ```
 
-## 🚀 Getting Started
+## 🚀 Deployment on OpenShift
 
-### Prerequisites
-- Node.js 18+ and npm
-- Mapbox account for map visualization
-- (Optional) Docker for containerized deployment
+## 1. Deploy the Anomaly Parser
+The anomaly parser must be deployed first, as it provides the real-time anomaly data consumed by the dashboard.  
 
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <your-git-url>
-   cd network-dashboard
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Configuration**
-   - The application uses a Mapbox token for map functionality
-   - Update the token in `src/pages/Index.tsx` or set up environment variables
-   - Configure data source URLs in `src/config/dbConfig.ts` if needed
-
-4. **Start development server**
-   ```bash
-   npm run dev
-   ```
-   The application will be available at `http://localhost:8080`
-
-### Development Scripts
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build for production
-- `npm run build:dev` - Build in development mode
-- `npm run preview` - Preview production build locally
-- `npm run lint` - Run ESLint code analysis
-
-## 🐳 Docker Deployment
-
-### Build and Run with Docker
+Apply the parser manifests:
 ```bash
-# Build the Docker image
-docker build -t network-dashboard .
-
-# Run the container
-docker run -p 8080:8080 network-dashboard
+oc apply -f anomaly-parser/manifest/deployment.yml \
+-f anomaly-parser/manifest/service.yml \
+-f anomaly-parser/manifest/route.yml
 ```
+
+This will expose the anomaly service through an OpenShift route.
+
+## 2. Configure Environment Variables
+Before deploying the dashboard, configure the following variables in your OpenShift environment or DeploymentConfig:
+
+- **`VITE_MAPBOX_TOKEN`** – Your Mapbox access token (required for the interactive map).
+- **`VITE_ANOMALIES_URL`** – The external URL of your anomaly parser service (from the route you deployed in step 1).
+- **`VITE_API_BASE_URL`** – (Optional) Base URL for any additional APIs.
+
+## 3. Build and Deploy the Dashboard
+Build and push the dashboard image:
+```bash
+# Build and tag the image
+docker build -t <registry-url>/network-dashboard:latest .
+
+# Push to your registry
+docker push <registry-url>/network-dashboard:latest
+```
+
+Deploy the image to OpenShift:
+```bash
+oc new-app <registry-url>/network-dashboard:latest \
+  -e VITE_MAPBOX_TOKEN=<your-mapbox-token> \
+  -e VITE_ANOMALIES_URL=<your-anomalies-service-url>
+```
+
+## 4. Expose the Dashboard
+Create a route so the dashboard is accessible externally:
+```bash
+oc expose svc/network-dashboard
+```
+
+Your dashboard will now be available via the OpenShift route.  
 
 ## ⚙️ Configuration
 
@@ -128,6 +125,7 @@ The application supports multiple data source configurations:
 - Primary URL from environment or configuration
 - Fallback to local `public/anomalies.json`
 - Custom URL support via localStorage
+- **Remote Data Mode**: Requires anomaly parser manifests to be deployed first
 
 ### Environment Variables
 Set these environment variables for custom configurations:
@@ -190,6 +188,7 @@ interface Event {
 - Check data source URLs in service configurations
 - Verify JSON file formats match expected interfaces
 - Check browser network tab for failed requests
+- For remote data mode: Ensure anomaly parser manifests are deployed and accessible
 
 **Build Failures**
 - Ensure all dependencies are installed: `npm install`
