@@ -65,6 +65,13 @@ src/
 └── pages/              # Route components
 ```
 
+## 📋 Prerequisites
+
+- **[OpenShift CLI (`oc`)](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html)** - For deployment
+- **[Mapbox access token](https://account.mapbox.com/access-tokens/)** - Required for map functionality  
+- **[Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/getting-started/installation)** - Only if building your own image
+- **OpenShift cluster access** - With deployment permissions
+
 ## 🚀 Deployment on OpenShift
 
 ### 1. Deploy the Anomaly Parser
