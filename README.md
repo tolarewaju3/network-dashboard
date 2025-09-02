@@ -115,8 +115,6 @@ Navigate to the url of route. It should look something like this
 
 `https://network-dashboard-ui-ai-cloud-ran-genai.apps.ocphub.user154/`
 
-```
-
 Your dashboard will now be available via the OpenShift route.  
 
 ## ⚙️ Configuration
