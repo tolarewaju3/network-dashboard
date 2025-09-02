@@ -95,6 +95,9 @@ docker build -t <registry-url>/network-dashboard:latest .
 # Push to your registry
 docker push <registry-url>/network-dashboard:latest
 ```
+Or, if you'd like to use my image, it's here:
+
+`quay.io/tolarewa/network-dashboard-ui`
 
 Deploy the image to OpenShift:
 ```bash
