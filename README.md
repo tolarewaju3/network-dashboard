@@ -75,7 +75,11 @@ Apply the parser manifests:
 oc apply -f anomaly-parser/manifests/
 ```
 
-This will expose the anomaly service through an OpenShift route.
+This will expose the anomaly service through an OpenShift route. To view the newly created route, run this command:
+
+```
+oc get route anomaly-parser
+```
 
 ### 2. Configure Environment Variables
 Before deploying the dashboard, configure the following variables in your OpenShift environment or DeploymentConfig:
