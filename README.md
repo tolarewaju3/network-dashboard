@@ -72,9 +72,7 @@ The anomaly parser must be deployed first, as it provides the real-time anomaly 
 
 Apply the parser manifests:
 ```bash
-oc apply -f anomaly-parser/manifest/deployment.yml \
--f anomaly-parser/manifest/service.yml \
--f anomaly-parser/manifest/route.yml
+oc apply -f anomaly-parser/manifests/
 ```
 
 This will expose the anomaly service through an OpenShift route.
