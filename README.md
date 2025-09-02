@@ -16,9 +16,7 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 
 ### 📊 Live Event Monitoring
 - **Real-time Event Feed**: Live stream of network events including:
-  - Call placement and dropped calls
   - Tower status changes (up/down)
-  - Alert triggers and resolutions
   - Remediation activities
   - Anomaly detections
 - **Event Filtering**: Filter events by specific cells or view all network activity
@@ -28,19 +26,12 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 - **Network Intelligence**: AI-powered chat interface for network insights and predictions
 - **Usage Predictions**: Query future usage patterns and capacity planning
 - **Performance Analytics**: Get insights on tower performance and optimization recommendations
-- **Sample Queries**: Pre-built queries for common network analysis tasks
 
 ### 🚨 Anomaly Detection
 - **Real-time Anomaly Monitoring**: Automatic detection and alerts for network anomalies
 - **Multi-source Data**: Support for both local JSON files and remote data sources
 - **Anomaly Classification**: Categorized anomaly types with recommended fixes
-- **Visual Indicators**: Map markers and feed items highlight anomalies with severity levels
 
-### 🎨 Modern UI/UX
-- **Dark/Light Theme**: Automatic theme switching with system preference support
-- **Responsive Design**: Full mobile and desktop compatibility
-- **Glass Morphism**: Modern glass effect styling with smooth animations
-- **Accessibility**: Full keyboard navigation and screen reader support
 
 ## 🏗️ Architecture
 
@@ -53,7 +44,6 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 - **Mapping**: Mapbox GL JS for interactive maps
 - **Themes**: Next.js themes for dark/light mode
 - **Data Fetching**: Native fetch API with fallback mechanisms
-- **Containerization**: Docker with Nginx for production deployment
 
 ### Project Structure
 ```
@@ -157,20 +147,12 @@ The application supports multiple data source configurations:
 - Fallback to local `public/anomalies.json`
 - Custom URL support via localStorage
 
-**Database Configuration**: `src/config/dbConfig.ts`
-- Toggle between mock and real data sources
-- Configure API endpoints and data refresh intervals
-
 ### Environment Variables
 Set these environment variables for custom configurations:
 - `VITE_MAPBOX_TOKEN` - Mapbox access token
 - `VITE_ANOMALIES_URL` - Custom anomalies data source URL
 - `VITE_API_BASE_URL` - Base URL for API endpoints
 
-### Theme Configuration
-- **Automatic**: Respects system dark/light preference
-- **Manual**: Theme toggle available in the UI
-- **Customization**: Modify theme colors in `tailwind.config.ts`
 
 ## 🔧 API Reference
 
@@ -213,43 +195,6 @@ interface Event {
 }
 ```
 
-### Custom Hooks
-
-**useAnomalies()**
-```typescript
-const { anomalies, isLoading, isError } = useAnomalies();
-```
-Returns: Processed anomaly data with caching and error handling
-
-**useCallRecords()**
-```typescript
-const { towers, callEvents, avgRecoveryTime, isLoading, isError } = useCallRecords();
-```
-Returns: Tower data, call events, and performance metrics
-
-**useChatAPI()**
-```typescript
-const { messages, isLoading, sendMessage, clearHistory } = useChatAPI();
-```
-Returns: Chat interface state and functions
-
-## 🎨 Styling and Themes
-
-### Design System
-- **Glass Morphism**: Modern glass-effect components with backdrop blur
-- **Gradient Backgrounds**: Subtle animated gradients for visual depth
-- **Color Scheme**: Carefully chosen colors for accessibility and aesthetics
-- **Typography**: Clear hierarchy with appropriate font weights and sizes
-
-### Custom CSS Classes
-- `.glass` - Glass morphism effect
-- `.glass-glow` - Glowing glass effect with hover states
-- `.glass-scrollbar` - Styled scrollbars matching the theme
-- `.theme-bg` - Dynamic background that adapts to theme
-
-### Component Variations
-All components support multiple variants and sizes through the class-variance-authority system, ensuring consistent styling across the application.
-
 ## 🔍 Troubleshooting
 
 ### Common Issues
@@ -279,37 +224,6 @@ All components support multiple variants and sizes through the class-variance-au
 - Use production builds for deployment
 - Configure CDN for better global performance
 - Monitor bundle size and code splitting opportunities
-
-## 🤝 Contributing
-
-### Development Workflow
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-feature`
-3. Make changes and test thoroughly
-4. Commit with conventional commit messages
-5. Push to your fork and create a pull request
-
-### Code Standards
-- **TypeScript**: Strict type checking enabled
-- **ESLint**: Configured for React and TypeScript best practices
-- **Prettier**: Code formatting on save
-- **Conventional Commits**: Use conventional commit format
-
-### Testing
-- Test all components in both light and dark themes
-- Verify responsive design on multiple screen sizes
-- Test data loading and error states
-- Ensure accessibility compliance
-
-## 📄 License
-
-This project is part of a Lovable project and follows the associated terms and conditions.
-
-## 🔗 Links
-
-- **Lovable Project**: https://lovable.dev/projects/84dc9ab1-82cd-4cf1-942c-ffbebe0e25b6
-- **Documentation**: This README
-- **Issues**: Use the project's issue tracker for bug reports and feature requests
 
 ---
 
