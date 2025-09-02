@@ -100,7 +100,8 @@ Deploy the image to OpenShift:
 ```bash
 oc new-app <registry-url>/network-dashboard:latest \
   -e VITE_MAPBOX_TOKEN=<your-mapbox-token> \
-  -e VITE_ANOMALIES_URL=<your-anomalies-service-url>
+  -e VITE_ANOMALIES_URL=<your-anomalies-service-url> \
+  --port=8080
 ```
 
 ### 4. Expose the Dashboard
