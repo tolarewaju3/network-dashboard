@@ -2,6 +2,8 @@
 
 A comprehensive real-time network monitoring dashboard for cellular tower networks, featuring interactive maps, live event feeds, anomaly detection, and AI-powered insights.
 
+![Network dashboard](img/dashboard.png "Screenshow of network dashboard")
+
 ## 🌟 Features
 
 ### 📡 Interactive Network Map
@@ -30,40 +32,6 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 - **Multi-source Data**: Support for both local JSON files and remote data sources
 - **Anomaly Classification**: Categorized anomaly types with recommended fixes
 
-
-## 🏗️ Architecture
-
-### Technology Stack
-- **Frontend**: React 18 with TypeScript
-- **Styling**: Tailwind CSS with shadcn/ui component library
-- **State Management**: React Query (TanStack Query) for server state
-- **Maps**: Mapbox GL JS for interactive maps
-- **Data Fetching**: Native fetch API with fallback mechanisms
-
-### Project Structure
-```
-src/
-├── components/          # React components
-│   ├── ui/             # shadcn/ui base components
-│   ├── MapView.tsx     # Interactive map component
-│   ├── LiveFeed.tsx    # Real-time event feed
-│   ├── RanChatBox.tsx  # AI chat interface
-│   ├── StatusHeader.tsx # Network status overview
-│   └── ...
-├── hooks/              # Custom React hooks
-│   ├── useAnomalies.ts    # Anomaly data management
-│   ├── useCallRecords.ts  # Call records and tower data
-│   ├── useChatAPI.ts      # Chat interface logic
-│   └── ...
-├── services/           # Data services and APIs
-│   ├── anomalyService.ts  # Anomaly detection logic
-│   ├── callService.ts     # Call record processing
-│   ├── towerService.ts    # Tower data management
-│   └── ...
-├── types/              # TypeScript type definitions
-├── utils/              # Utility functions
-└── pages/              # Route components
-```
 
 ## 📋 Prerequisites
 
@@ -132,6 +100,40 @@ https://network-dashboard-ui-ai-cloud-ran-genai.apps.ocphub.user154/
 ```
 
 Your dashboard will now be available via the OpenShift route.  
+
+## 🏗️ Architecture
+
+### Technology Stack
+- **Frontend**: React 18 with TypeScript
+- **Styling**: Tailwind CSS with shadcn/ui component library
+- **State Management**: React Query (TanStack Query) for server state
+- **Maps**: Mapbox GL JS for interactive maps
+- **Data Fetching**: Native fetch API with fallback mechanisms
+
+### Project Structure
+```
+src/
+├── components/          # React components
+│   ├── ui/             # shadcn/ui base components
+│   ├── MapView.tsx     # Interactive map component
+│   ├── LiveFeed.tsx    # Real-time event feed
+│   ├── RanChatBox.tsx  # AI chat interface
+│   ├── StatusHeader.tsx # Network status overview
+│   └── ...
+├── hooks/              # Custom React hooks
+│   ├── useAnomalies.ts    # Anomaly data management
+│   ├── useCallRecords.ts  # Call records and tower data
+│   ├── useChatAPI.ts      # Chat interface logic
+│   └── ...
+├── services/           # Data services and APIs
+│   ├── anomalyService.ts  # Anomaly detection logic
+│   ├── callService.ts     # Call record processing
+│   ├── towerService.ts    # Tower data management
+│   └── ...
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions
+└── pages/              # Route components
+```
 
 ## ⚙️ Configuration
 
