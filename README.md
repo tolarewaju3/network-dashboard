@@ -12,8 +12,6 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 
 - 🤖 **RAN AI Chat Interface:** AI-powered chat for network insights, predictions, and performance analytics.
 
-- 🚨 **Anomaly Detection:** Automatic anomaly detection with classification and recommended fixes, from both local and remote data sources.
-
 ## 📋 Prerequisites
 
 - **[OpenShift CLI (`oc`)](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html)** - For deployment
