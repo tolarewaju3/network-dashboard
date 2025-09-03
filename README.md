@@ -22,14 +22,20 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 ## 🚀 Deployment on OpenShift
 
 ### 1. Deploy the Anomaly Parser
-The anomaly parser must be deployed first, as it provides the real-time anomaly data consumed by the dashboard.  
+The anomaly parser must be deployed first. It extracts needed data for the dashboard for the RAN Chat API
 
-Apply the parser manifests:
+First, login to your OpenShift cluster.
+
+```
+oc login <your_cluster_url> -u <your_username> -p developer
+```
+
+Then, **deploy the anomaly service** by applying the deployment, service, and route manifests:
 ```bash
 oc apply -f anomaly-parser/manifests/
 ```
 
-This will expose the anomaly service through an OpenShift route. To view the newly created route, run this command:
+This will expose the anomaly service through an OpenShift route. View the newly created route and URL.
 
 ```
 oc get route anomaly-parser
@@ -46,10 +52,10 @@ Before deploying the dashboard, configure the following variables in your OpenSh
 Build and push the dashboard image:
 ```bash
 # Build and tag the image
-docker build -t <registry-url>/network-dashboard:latest .
+podman build -t <registry-url>/network-dashboard .
 
 # Push to your registry
-docker push <registry-url>/network-dashboard:latest
+docker push <registry-url>/network-dashboard
 ```
 Or, if you'd like to use my image, it's here:
 
@@ -59,7 +65,7 @@ quay.io/tolarewa/network-dashboard-ui
 
 Deploy the image to OpenShift:
 ```bash
-oc new-app <registry-url>/network-dashboard:latest \
+oc new-app <registry-url>/network-dashboard \
   -e VITE_MAPBOX_TOKEN=<your-mapbox-token> \
   -e VITE_ANOMALIES_URL=<your-anomalies-service-url> \
   --port=8080
@@ -71,14 +77,15 @@ Create a route so the dashboard is accessible externally:
 oc expose svc/network-dashboard
 ```
 
-### 5. View the Dashboard
-Navigate to the url of route. It should look something like this:
-
-```
-https://network-dashboard-ui-ai-cloud-ran-genai.apps.ocphub.user154/
-```
-
 Your dashboard will now be available via the OpenShift route.  
+
+### 5. View the Dashboard
+Navigate to the url of your dashboard. You can find the URL in the route.
+
+```
+oc get route network-dashboard
+```
+
 
 ## 🏗️ Architecture
 
