@@ -7,30 +7,16 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 ## 🌟 Features
 
 ### 📡 Interactive Network Map
-- **Real-time Tower Visualization**: Interactive map displaying cell tower locations with status indicators
-- **Multi-status Support**: Visual indicators for tower status (online/offline), anomalies, and performance metrics
-- **Detailed Tower Information**: Click on any tower to view comprehensive details including:
-  - Anomaly alerts and recommendations
-  - Frequency bands supported
-  - Adjacent cell information
+ Real-time visualization of cell towers with status (online/offline, anomalies, performance) and drill-down details.
 
 ### 📊 Live Event Monitoring
-- **Real-time Event Feed**: Live stream of network events including:
-  - Tower status changes (up/down)
-  - Remediation activities
-  - Anomaly detections
-- **Event Filtering**: Filter events by specific cells or view all network activity
-- **Event Details**: Click any event for detailed information and context
+Stream of network events (status changes, remediations, anomalies) with filtering and detail view.
 
 ### 🤖 RAN AI Chat Interface
-- **Network Intelligence**: AI-powered chat interface for network insights and predictions
-- **Usage Predictions**: Query future usage patterns and capacity planning
-- **Performance Analytics**: Get insights on tower performance and optimization recommendations
+AI-powered chat for network insights, predictions, and performance analytics.
 
 ### 🚨 Anomaly Detection
-- **Real-time Anomaly Monitoring**: Automatic detection and alerts for network anomalies
-- **Multi-source Data**: Support for both local JSON files and remote data sources
-- **Anomaly Classification**: Categorized anomaly types with recommended fixes
+Automatic anomaly detection with classification and recommended fixes, from both local and remote data sources.
 
 
 ## 📋 Prerequisites
