@@ -6,7 +6,7 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 
 ## 🌟 Features
 
- - 📡 **Interactive Network Map:** Real-time visualization of cell towers with status (online/offline, anomalies, performance) and drill-down details.
+ - 📡 **Interactive Network Map:** Real-time visualization of cell towers with status (online/offline, anomalies, recommended fixes, performance) and drill-down details.
 
 - 📊 **Live Event Monitoring:** Stream of network events (status changes, remediations, anomalies) with filtering and detail view.
 
