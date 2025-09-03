@@ -14,15 +14,15 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 
 ## 📋 Prerequisites
 
-- **[OpenShift CLI (`oc`)](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html)** - For deployment
-- **[Mapbox access token](https://account.mapbox.com/access-tokens/)** - Required for map functionality  
-- **[Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/getting-started/installation)** - Only if building your own image
-- **OpenShift cluster access** - With deployment permissions
+- [OpenShift CLI (`oc`)](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html) - For deployment
+- [Mapbox access token](https://www.mapbox.com/) - Required for map functionality  
+- [Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/getting-started/installation) - Only if building your own image
+- OpenShift cluster access - With deployment permissions
 
 ## 🚀 Deployment on OpenShift
 
 ### 1. Deploy the Anomaly Parser
-The anomaly parser must be deployed first. It extracts needed data for the dashboard for the RAN Chat API
+The anomaly parser extracts needed data for the dashboard for the AI RAN Event API. It'll need to deployed before the dashboard.
 
 First, login to your OpenShift cluster.
 
