@@ -2,7 +2,7 @@
 
 A comprehensive real-time network monitoring dashboard for cellular tower networks, featuring interactive maps, live event feeds, anomaly detection, and AI-powered insights.
 
-![Network dashboard](img/dashboard.png "Screenshow of network dashboard")
+![Network dashboard](img/dashboard-ui.png "Screenshow of network dashboard")
 
 ## 🌟 Features
 
