@@ -21,7 +21,7 @@ spec:
         # 1) Your image: fetch → parse → write outputs to /data
         - name: worker
           image: docker.io/tolarewaju3/anomaly-parser:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: RAW_URL
               value: "http://ranchat.ai-cloud-ran-genai.svc.cluster.local:5000/api/events"
