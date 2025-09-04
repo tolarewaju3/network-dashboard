@@ -27,7 +27,7 @@ The anomaly parser extracts needed data for the dashboard for the AI RAN Event A
 First, login to your OpenShift cluster.
 
 ```
-oc login <your_cluster_url> -u <your_username> -p developer
+oc login <your_cluster_url> -u <your_username> -p <your_password>
 ```
 
 Then, **deploy the anomaly service** by applying the deployment, service, and route manifests:
