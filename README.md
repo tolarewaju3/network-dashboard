@@ -18,6 +18,7 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 - [Mapbox access token](https://www.mapbox.com/) - Required for map functionality  
 - [Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/getting-started/installation) - Only if building your own image
 - OpenShift cluster access - With deployment permissions
+- A deployed instance of the [AI-enabled RAN project](https://github.com/rh-ssa-demos/agentic-ai-enabled-ran/tree/main)
 
 ## 🚀 Deployment on OpenShift
 
