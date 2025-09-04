@@ -55,7 +55,7 @@ Build and push the dashboard image:
 podman build -t <registry-url>/network-dashboard .
 
 # Push to your registry
-docker push <registry-url>/network-dashboard
+podman push <registry-url>/network-dashboard
 ```
 Or, if you'd like to use my image, it's here:
 
