@@ -92,10 +92,11 @@ oc create route edge network-dashboard \
 Your dashboard will now be available via the OpenShift route. Please note that you may need to change the TLS settings on the route depending on your OpenShift setup.
 
 ### 5. View the Dashboard
-Navigate to the url of your dashboard. You can find the URL in the route.
+Navigate to the url of your dashboard. Find the URL in the network dashboard route.
 
 ```
-oc get route network-dashboard
+echo "https://$(oc get route network-dashboard -o jsonpath='{.spec.host}')"
+
 ```
 
 
