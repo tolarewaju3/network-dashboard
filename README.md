@@ -152,49 +152,7 @@ The application supports multiple data source configurations:
 Set these environment variables for custom configurations:
 - `VITE_MAPBOX_TOKEN` - Mapbox access token
 - `VITE_ANOMALIES_URL` - Custom anomalies data source URL
-- `VITE_API_BASE_URL` - Base URL for API endpoints
 
-
-## 🔧 API Reference
-
-### Data Types
-
-**Tower Interface**
-```typescript
-interface Tower {
-  id: number;
-  name: string;
-  lat: number;
-  lng: number;
-  status: "up" | "down";
-  downSince?: Date;
-  droppedCalls?: number;
-  dropRate?: number;
-  bands?: string[];
-  city?: string;
-  areaType?: string;
-  maxCapacity?: number;
-  adjacentCells?: number[];
-}
-```
-
-**Event Interface**
-```typescript
-interface Event {
-  type: EventType;
-  timestamp: Date;
-  message: string;
-  towerId: number;
-  cellId?: string;
-  recoveryTime?: number;
-  location?: { lat: number; lng: number };
-  signalStrength?: number;
-  anomalyType?: string;
-  band?: string;
-  sourceId?: string;
-  recommendedFix?: string;
-}
-```
 
 ## 🔍 Troubleshooting
 
