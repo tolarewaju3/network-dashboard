@@ -45,7 +45,7 @@ Finally, **deploy the anomaly service**.
 oc apply -f anomaly-parser/manifests/
 ```
 
-This will deploy the service and expose it through an OpenShift route. Check to make sure the anomaly parser is running by visitng the route URL.
+This will deploy the service and expose it through an OpenShift route. **Visit the route URL** to make sure the anomaly parser is running.
 
 ```
 echo "https://$(oc get route anomaly-parser -o jsonpath='{.spec.host}')"
