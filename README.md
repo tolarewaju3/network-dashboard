@@ -24,22 +24,34 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 ### 1. Deploy the Anomaly Parser
 The anomaly parser extracts needed data for the dashboard for the AI RAN Event API. It'll need to deployed before the dashboard.
 
-First, login to your OpenShift cluster.
+First, **login to your OpenShift cluster.**
 
 ```
 oc login <your_cluster_url> -u <your_username> -p <your_password>
 ```
 
-Then, **deploy the anomaly service** by applying the deployment, service, and route manifests:
+Next, **modify the anomaly parser** to point to your RAN event API.
+
+```
+# anomaly-parser/manifests/deployment.yml
+
+- name: RAW_URL
+  value: "http://ranchat.ai-cloud-ran-genai.svc.cluster.local:5000/api/events"
+```
+
+Then, **deploy the anomaly service**. by applying the deployment, service, and route manifests:
 ```bash
 oc apply -f anomaly-parser/manifests/
 ```
 
-This will expose the anomaly service through an OpenShift route. View the newly created route and URL.
+This will expose the anomaly service through an OpenShift route. Check to make sure the anomaly parser is running by visitng the URL.
 
 ```
-oc get route anomaly-parser
+echo "https://$(oc get route anomaly-parser -o jsonpath='{.spec.host}')"
+
 ```
+
+
 
 ### 2. Configure Environment Variables
 Before deploying the dashboard, configure the following variables in your OpenShift environment or DeploymentConfig:
