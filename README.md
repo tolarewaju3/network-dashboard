@@ -23,7 +23,7 @@ A comprehensive real-time network monitoring dashboard for cellular tower networ
 ## 🚀 Deployment on OpenShift
 
 ### 1. Deploy the Anomaly Parser
-The anomaly parser extracts needed data for the dashboard for the AI RAN Event API. It'll need to deployed before the dashboard.
+The anomaly parser extracts the required data for the dashboard from the AI RAN Event API. It must be deployed before the dashboard.
 
 First, **login to your OpenShift cluster.**
 
