@@ -48,7 +48,6 @@ This will deploy the service and expose it through an OpenShift route. Check to 
 
 ```
 echo "https://$(oc get route anomaly-parser -o jsonpath='{.spec.host}')"
-
 ```
 
 ### 2. Configure Environment Variables
@@ -96,9 +95,7 @@ Navigate to the url of your dashboard. Find the URL in the network dashboard rou
 
 ```
 echo "https://$(oc get route network-dashboard -o jsonpath='{.spec.host}')"
-
 ```
-
 
 ## 🏗️ Architecture
 
