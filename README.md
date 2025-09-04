@@ -39,12 +39,12 @@ Next, **modify the anomaly parser** to point to your RAN event API.
   value: "http://ranchat.ai-cloud-ran-genai.svc.cluster.local:5000/api/events"
 ```
 
-Then, **deploy the anomaly service**. by applying the deployment, service, and route manifests:
+Finally, **deploy the anomaly service**.
 ```bash
 oc apply -f anomaly-parser/manifests/
 ```
 
-This will expose the anomaly service through an OpenShift route. Check to make sure the anomaly parser is running by visitng the URL.
+This will deploy the service and expose it through an OpenShift route. Check to make sure the anomaly parser is running by visitng the route URL.
 
 ```
 echo "https://$(oc get route anomaly-parser -o jsonpath='{.spec.host}')"
