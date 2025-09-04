@@ -32,7 +32,7 @@ oc login <your_cluster_url> -u <your_username> -p <your_password>
 
 Next, **modify the anomaly parser** to point to your RAN event API.
 
-```
+```yml
 # anomaly-parser/manifests/deployment.yml
 
 - name: RAW_URL
