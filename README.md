@@ -51,8 +51,6 @@ echo "https://$(oc get route anomaly-parser -o jsonpath='{.spec.host}')"
 
 ```
 
-
-
 ### 2. Configure Environment Variables
 Before deploying the dashboard, configure the following variables in your OpenShift environment or DeploymentConfig:
 
@@ -80,16 +78,18 @@ Deploy the image to OpenShift:
 oc new-app <registry-url>/network-dashboard \
   -e VITE_MAPBOX_TOKEN=<your-mapbox-token> \
   -e VITE_ANOMALIES_URL=<your-anomalies-service-url> \
-  --port=8080
 ```
 
 ### 4. Expose the Dashboard
 Create a route so the dashboard is accessible externally:
 ```bash
-oc expose svc/network-dashboard
+oc create route edge network-dashboard \
+  --service=network-dashboard \
+  --port=8080 \
+  --insecure-policy=Redirect
 ```
 
-Your dashboard will now be available via the OpenShift route.  
+Your dashboard will now be available via the OpenShift route. Please note that you may need to change the TLS settings on the route depending on your OpenShift setup.
 
 ### 5. View the Dashboard
 Navigate to the url of your dashboard. You can find the URL in the route.
