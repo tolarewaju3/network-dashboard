@@ -3,7 +3,7 @@ import { Event } from '../types/network';
 import { Bell, BellOff, Phone, TowerControl, ArrowUp, ArrowDown, Database, Settings, CheckCircle, MapPin, Signal, AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-import { dbConfig } from '../../config/app/dbConfig';
+import { dbConfig } from '../config/dbConfig';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import EventDetailsDialog from './EventDetailsDialog';
 interface LiveFeedProps {
