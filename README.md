@@ -146,7 +146,6 @@ The application supports multiple data source configurations:
 - Primary URL from environment or configuration
 - Fallback to local `public/anomalies.json`
 - Custom URL support via localStorage
-- **Remote Data Mode**: Requires anomaly parser manifests to be deployed first
 
 ### Environment Variables
 Set these environment variables for custom configurations:
