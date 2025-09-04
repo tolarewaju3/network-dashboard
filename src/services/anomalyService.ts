@@ -1,5 +1,5 @@
 import { Event } from '../types/network';
-import { dbConfig } from '../config/dbConfig';
+import { dbConfig } from '../../config/app/dbConfig';
 import { toast } from '@/hooks/use-toast';
 
 interface AnomalyRecord {

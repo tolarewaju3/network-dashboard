@@ -9,7 +9,7 @@ import {
   getAvgRecoveryTime,
   subscribeToCallRecords
 } from '../services/dbService';
-import { dbConfig } from '../config/dbConfig';
+import { dbConfig } from '../../config/app/dbConfig';
 
 export function useCallRecords(limit: number = 100) {
   const queryClient = useQueryClient();

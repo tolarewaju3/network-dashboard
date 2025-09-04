@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Event } from '../types/network';
 import { fetchRemediationEvents } from '../services/dbService';
-import { dbConfig } from '../config/dbConfig';
+import { dbConfig } from '../../config/app/dbConfig';
 
 export function useRemediationEvents(limit: number = 50) {
   const queryClient = useQueryClient();

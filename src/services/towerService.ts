@@ -1,5 +1,5 @@
 import { Tower } from '../types/network';
-import { dbConfig } from '../config/dbConfig';
+import { dbConfig } from '../../config/app/dbConfig';
 import { toast } from '@/hooks/use-toast';
 
 // Load towers from JSON (local or remote)

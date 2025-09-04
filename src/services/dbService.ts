@@ -1,6 +1,6 @@
 import { fetchCallRecords, fetchRecentDroppedCalls, convertCallsToEvents } from './callService';
 import { deriveTowersFromCalls, getAvgRecoveryTime } from './towerService';
-import { dbConfig } from '../config/dbConfig';
+import { dbConfig } from '../../config/app/dbConfig';
 
 // Always use mock data now
 console.log('Using mock data for all database operations');
