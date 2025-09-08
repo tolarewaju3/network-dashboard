@@ -56,7 +56,6 @@ Before deploying the dashboard, configure the following variables in your OpenSh
 
 - **`VITE_MAPBOX_TOKEN`** – Your Mapbox access token (required for the interactive map).
 - **`VITE_ANOMALIES_URL`** – The URL of your anomaly parser service (from the route you deployed in step 1).
-- **`VITE_API_BASE_URL`** – (Optional) Base URL for any additional APIs.
 
 ### 3. Build and Deploy the Dashboard
 Build and push the dashboard image:
