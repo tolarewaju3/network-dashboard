@@ -74,7 +74,7 @@ quay.io/tolarewa/network-dashboard-ui
 
 Deploy the image to OpenShift:
 ```bash
-oc new-app <registry-url>/network-dashboard \
+oc new-app <your-image-url> \
   -e VITE_MAPBOX_TOKEN=<your-mapbox-token> \
   -e VITE_ANOMALIES_URL=<your-anomalies-service-url> \
 ```
