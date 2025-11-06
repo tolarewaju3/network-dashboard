@@ -11,7 +11,7 @@ export function useRemediationEvents(limit: number = 50) {
     queryFn: async (): Promise<Event[]> => {
       const events = await fetchEventsFromSupabase();
       return events.filter(e => 
-        e.type === 'remediation-started' || e.type === 'remediation-completed'
+        e.type === 'remediation-proposed' || e.type === 'remediation-completed'
       ).slice(0, limit);
     },
     refetchInterval: 10000,
@@ -19,7 +19,7 @@ export function useRemediationEvents(limit: number = 50) {
 
   useEffect(() => {
     const unsubscribe = subscribeToEvents((newEvent) => {
-      if (newEvent.type === 'remediation-started' || newEvent.type === 'remediation-completed') {
+      if (newEvent.type === 'remediation-proposed' || newEvent.type === 'remediation-completed') {
         queryClient.invalidateQueries({ queryKey: ['remediationEvents'] });
       }
     });

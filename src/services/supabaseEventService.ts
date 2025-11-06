@@ -18,8 +18,8 @@ export async function fetchEventsFromSupabase(): Promise<Event[]> {
     let eventType = event.event_type;
     if (eventType === 'anomaly') {
       eventType = 'anomaly-detected';
-    } else if (eventType === 'remediation_started') {
-      eventType = 'remediation-started';
+    } else if (eventType === 'remediation_proposed') {
+      eventType = 'remediation-proposed';
     } else if (eventType === 'remediation_completed') {
       eventType = 'remediation-completed';
     }
@@ -61,8 +61,8 @@ export function subscribeToEvents(callback: (event: Event) => void) {
         let eventType = newEvent.event_type;
         if (eventType === 'anomaly') {
           eventType = 'anomaly-detected';
-        } else if (eventType === 'remediation_started') {
-          eventType = 'remediation-started';
+        } else if (eventType === 'remediation_proposed') {
+          eventType = 'remediation-proposed';
         } else if (eventType === 'remediation_completed') {
           eventType = 'remediation-completed';
         }
