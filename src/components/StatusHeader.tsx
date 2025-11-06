@@ -1,9 +1,5 @@
 import { Tower } from "../types/network";
 import { Progress } from "@/components/ui/progress";
-import { getAnomalyDataSource } from "../services/anomalyService";
-import { useEffect, useState } from "react";
-import { Badge } from "./ui/badge";
-import { AlertTriangle, CheckCircle } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 interface ProcessedAnomaly {
   cellId: string;
@@ -22,21 +18,6 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
   avgRecoveryTime,
   anomalies
 }) => {
-  const [dataSource, setDataSource] = useState<{ isUsingFallback: boolean; dataSource: string } | null>(null);
-
-  // Check data source status periodically
-  useEffect(() => {
-    const checkDataSource = () => {
-      const source = getAnomalyDataSource();
-      setDataSource(source);
-    };
-    
-    checkDataSource();
-    const interval = setInterval(checkDataSource, 5000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
   const totalTowers = towers.length;
   const activeTowers = towers.filter(tower => tower.status === "up").length;
   const towersWithAnomalies = towers.filter(tower => anomalies.has(tower.id.toString())).length;
@@ -69,28 +50,7 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-foreground drop-shadow-lg">Network Dashboard</h1>
-          
-          <div className="flex items-center gap-3">
-            {dataSource && (
-              <Badge 
-                variant={dataSource.isUsingFallback ? "destructive" : "default"} 
-                className="flex items-center gap-1"
-              >
-                {dataSource.isUsingFallback ? (
-                  <>
-                    <AlertTriangle size={14} />
-                    Fallback Mode (Local JSON)
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle size={14} />
-                    Live
-                  </>
-                )}
-              </Badge>
-            )}
-            <ThemeToggle />
-          </div>
+          <ThemeToggle />
         </div>
         
         <div className="flex flex-wrap gap-6">
