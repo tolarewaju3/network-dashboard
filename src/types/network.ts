@@ -25,6 +25,8 @@ export type EventType =
   | "alert-triggered" 
   | "alert-resolved"
   | "remediation-proposed"
+  | "remediation-executing"
+  | "remediation-verified"
   | "remediation-completed"
   | "anomaly-detected";
 

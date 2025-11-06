@@ -57,6 +57,10 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
         return <BellOff className="text-blue-400" />;
       case 'remediation-proposed':
         return <Settings className="text-orange-400" />;
+      case 'remediation-executing':
+        return <Settings className="text-purple-400 animate-spin" />;
+      case 'remediation-verified':
+        return <CheckCircle className="text-cyan-400" />;
       case 'remediation-completed':
         return <CheckCircle className="text-green-400" />;
       case 'anomaly-detected':
@@ -82,6 +86,10 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
         return 'Alert Resolved';
       case 'remediation-proposed':
         return 'Remediation Proposed';
+      case 'remediation-executing':
+        return 'Remediation Executing';
+      case 'remediation-verified':
+        return 'Remediation Verified';
       case 'remediation-completed':
         return 'Remediation Completed';
       case 'anomaly-detected':
@@ -104,6 +112,8 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
         return 'default';
       case 'call-placed':
       case 'remediation-proposed':
+      case 'remediation-executing':
+      case 'remediation-verified':
         return 'secondary';
       default:
         return 'outline';

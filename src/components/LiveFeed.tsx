@@ -37,6 +37,10 @@ const LiveFeed: React.FC<LiveFeedProps> = ({
         return <BellOff size={20} className="text-blue-400" />;
       case 'remediation-proposed':
         return <Settings size={20} className="text-orange-400" />;
+      case 'remediation-executing':
+        return <Settings size={20} className="text-purple-400 animate-spin" />;
+      case 'remediation-verified':
+        return <CheckCircle size={20} className="text-cyan-400" />;
       case 'remediation-completed':
         return <CheckCircle size={20} className="text-green-400" />;
       case 'anomaly-detected':
@@ -60,6 +64,10 @@ const LiveFeed: React.FC<LiveFeedProps> = ({
         return `${baseClasses} bg-amber-500/10 border border-amber-400/30 hover:bg-amber-500/20`;
       case 'remediation-proposed':
         return `${baseClasses} bg-orange-500/10 border border-orange-400/30 hover:bg-orange-500/20`;
+      case 'remediation-executing':
+        return `${baseClasses} bg-purple-500/10 border border-purple-400/30 hover:bg-purple-500/20`;
+      case 'remediation-verified':
+        return `${baseClasses} bg-cyan-500/10 border border-cyan-400/30 hover:bg-cyan-500/20`;
       case 'remediation-completed':
         return `${baseClasses} bg-green-500/10 border border-green-400/30 hover:bg-green-500/20`;
       case 'anomaly-detected':
@@ -84,6 +92,10 @@ const LiveFeed: React.FC<LiveFeedProps> = ({
         return `Alert Resolved`;
       case 'remediation-proposed':
         return `Remediation Proposed`;
+      case 'remediation-executing':
+        return `Remediation Executing`;
+      case 'remediation-verified':
+        return `Remediation Verified`;
       case 'remediation-completed':
         return `Remediation Completed`;
       case 'anomaly-detected':
