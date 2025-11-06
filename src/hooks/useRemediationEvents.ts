@@ -1,36 +1,34 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Event } from '../types/network';
-import { fetchRemediationEvents } from '../services/dbService';
-import { dbConfig } from '../config/dbConfig';
+import { fetchEventsFromSupabase, subscribeToEvents } from '../services/supabaseEventService';
 
 export function useRemediationEvents(limit: number = 50) {
   const queryClient = useQueryClient();
 
-  // Fetch remediation events
   const remediationEventsQuery = useQuery({
     queryKey: ['remediationEvents'],
-    queryFn: () => fetchRemediationEvents(limit),
-    refetchInterval: 10000, // Poll every 10 seconds with mock data
+    queryFn: async (): Promise<Event[]> => {
+      const events = await fetchEventsFromSupabase();
+      return events.filter(e => 
+        e.type === 'remediation-started' || e.type === 'remediation-completed'
+      ).slice(0, limit);
+    },
+    refetchInterval: 10000,
   });
 
-  // No real-time subscriptions with mock data
   useEffect(() => {
-    console.log('Real-time subscriptions not available with mock data');
-  }, [queryClient, limit]);
+    const unsubscribe = subscribeToEvents((newEvent) => {
+      if (newEvent.type === 'remediation-started' || newEvent.type === 'remediation-completed') {
+        queryClient.invalidateQueries({ queryKey: ['remediationEvents'] });
+      }
+    });
 
-  // Transform data to Event format
-  const events: Event[] = remediationEventsQuery.data?.map((event: any) => ({
-    id: event.id || Math.random().toString(),
-    type: event.event_type || 'remediation-started',
-    timestamp: new Date(event.event_time || Date.now()),
-    message: event.description || 'Remediation event',
-    towerId: event.towerId || Math.floor(Math.random() * 5) + 1,
-    cellId: event.cellId,
-  })) || [];
+    return unsubscribe;
+  }, [queryClient]);
 
   return {
-    events,
+    events: remediationEventsQuery.data || [],
     isLoading: remediationEventsQuery.isLoading,
     isError: remediationEventsQuery.isError,
     error: remediationEventsQuery.error,
