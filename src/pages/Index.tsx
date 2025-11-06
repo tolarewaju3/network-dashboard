@@ -61,7 +61,7 @@ const Index = () => {
         <main className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 h-[500px] overflow-hidden rounded-lg glass-glow relative">
-              <MapView towers={towers} mapboxToken={mapboxToken} />
+              <MapView towers={towers} mapboxToken={mapboxToken} remediationEvents={remediationEvents} />
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center glass-dark rounded-lg">
                   <div className="text-center">

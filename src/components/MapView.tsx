@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Tower } from '../types/network';
+import { Tower, Event } from '../types/network';
 import { useAnomalies } from '../hooks/useAnomalies';
 import { hasAnomaly, getAnomalyInfo } from '../services/anomalyService';
 import { useTheme } from 'next-themes';
@@ -10,9 +10,10 @@ import { useTheme } from 'next-themes';
 interface MapViewProps {
   towers: Tower[];
   mapboxToken: string;
+  remediationEvents: Event[];
 }
 
-const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
+const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvents }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: number]: mapboxgl.Marker }>({});
@@ -166,9 +167,18 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
         let markerColor = '#4ade80'; // Default green for up status
         let shadowColor = 'rgba(74, 222, 128, 0.6)';
         
-        // Check for anomalies first (highest priority)
         const towerId = tower.id.toString();
-        if (hasAnomaly(towerId, anomalies)) {
+        
+        // Check for remediation_verified event first (highest priority - overrides everything)
+        const hasRemediationVerified = remediationEvents.some(
+          event => event.type === 'remediation-verified' && 
+          (event.cellId === towerId || event.towerId.toString() === towerId)
+        );
+        
+        if (hasRemediationVerified) {
+          markerColor = '#22c55e'; // Green for verified remediation
+          shadowColor = 'rgba(34, 197, 94, 0.7)';
+        } else if (hasAnomaly(towerId, anomalies)) {
           markerColor = '#f87171'; // Red for anomalies
           shadowColor = 'rgba(248, 113, 113, 0.6)';
         } else if (tower.status === 'down') {
@@ -261,7 +271,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken }) => {
       map.current.on('load', addMarkers);
     }
 
-  }, [towers, anomalies, map.current]);
+  }, [towers, anomalies, remediationEvents, map.current]);
 
   return (
     <div className="relative w-full h-full">
