@@ -176,8 +176,8 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         );
         
         if (hasRemediationVerified) {
-          markerColor = '#22c55e'; // Green for verified remediation
-          shadowColor = 'rgba(34, 197, 94, 0.7)';
+          markerColor = '#4ade80'; // Same green as healthy towers
+          shadowColor = 'rgba(74, 222, 128, 0.6)';
         } else if (hasAnomaly(towerId, anomalies)) {
           markerColor = '#f87171'; // Red for anomalies
           shadowColor = 'rgba(248, 113, 113, 0.6)';
