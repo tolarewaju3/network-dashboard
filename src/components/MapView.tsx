@@ -146,6 +146,35 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
   useEffect(() => {
     if (!map.current) return;
 
+    // Helper function to check if there are anomalies after the most recent remediation
+    const hasAnomaliesAfterRemediation = (cellId: string): boolean => {
+      // Find the most recent remediation_verified event for this cell
+      const cellRemediationEvents = remediationEvents.filter(
+        event => event.type === 'remediation-verified' && 
+        (event.cellId === cellId || event.towerId.toString() === cellId)
+      );
+      
+      if (cellRemediationEvents.length === 0) {
+        // No remediation, so any anomaly counts
+        return hasAnomaly(cellId, anomalies);
+      }
+      
+      // Get the most recent remediation timestamp
+      const latestRemediation = cellRemediationEvents.reduce((latest, event) => {
+        return event.timestamp > latest.timestamp ? event : latest;
+      });
+      
+      // Check if there are any anomalies for this cell
+      const cellAnomalies = anomalies.get(cellId);
+      if (!cellAnomalies) {
+        return false;
+      }
+      
+      // Check if the latest anomaly is after the remediation
+      const latestAnomalyDate = new Date(cellAnomalies.latestDate);
+      return latestAnomalyDate > latestRemediation.timestamp;
+    };
+
     // Wait for map to load before adding markers
     const addMarkers = () => {
       // Create a set of tower IDs from current data for efficient lookup
@@ -169,17 +198,20 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         
         const towerId = tower.id.toString();
         
-        // Check for remediation_verified event first (highest priority - overrides everything)
+        // Check for remediation_verified event first
         const hasRemediationVerified = remediationEvents.some(
           event => event.type === 'remediation-verified' && 
           (event.cellId === towerId || event.towerId.toString() === towerId)
         );
         
-        if (hasRemediationVerified) {
-          markerColor = '#4ade80'; // Same green as healthy towers
+        // Check if there are new anomalies after remediation
+        const hasNewAnomalies = hasAnomaliesAfterRemediation(towerId);
+        
+        if (hasRemediationVerified && !hasNewAnomalies) {
+          markerColor = '#4ade80'; // Green for successfully remediated
           shadowColor = 'rgba(74, 222, 128, 0.6)';
         } else if (hasAnomaly(towerId, anomalies)) {
-          markerColor = '#f87171'; // Red for anomalies
+          markerColor = '#f87171'; // Red for anomalies (including new ones after remediation)
           shadowColor = 'rgba(248, 113, 113, 0.6)';
         } else if (tower.status === 'down') {
           markerColor = '#f87171'; // Red for down status
