@@ -55,7 +55,7 @@ const Index = () => {
       
       <div className="relative z-10">
         <div className="px-4 py-2">
-          <StatusHeader towers={towers} avgRecoveryTime={avgRecoveryTime} anomalies={anomalies} />
+          <StatusHeader towers={towers} avgRecoveryTime={avgRecoveryTime} anomalies={anomalies} remediationEvents={remediationEvents} />
         </div>
         
         <main className="container mx-auto px-4 py-6">

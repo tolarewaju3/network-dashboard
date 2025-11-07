@@ -1,6 +1,8 @@
-import { Tower } from "../types/network";
+import { Tower, Event } from "../types/network";
 import { Progress } from "@/components/ui/progress";
 import { ThemeToggle } from "./ThemeToggle";
+import { hasAnomaly } from "../services/anomalyService";
+
 interface ProcessedAnomaly {
   cellId: string;
   count: number;
@@ -12,16 +14,47 @@ interface StatusHeaderProps {
   towers: Tower[];
   avgRecoveryTime: number;
   anomalies: Map<string, ProcessedAnomaly>;
+  remediationEvents: Event[];
 }
 const StatusHeader: React.FC<StatusHeaderProps> = ({
   towers,
   avgRecoveryTime,
-  anomalies
+  anomalies,
+  remediationEvents
 }) => {
+  // Helper function to check if there are anomalies after the most recent remediation
+  const hasUnresolvedAnomalies = (cellId: string): boolean => {
+    // Find the most recent remediation_verified event for this cell
+    const cellRemediationEvents = remediationEvents.filter(
+      event => event.type === 'remediation-verified' && 
+      (event.cellId === cellId || event.towerId.toString() === cellId)
+    );
+    
+    if (cellRemediationEvents.length === 0) {
+      // No remediation, so any anomaly counts as unresolved
+      return hasAnomaly(cellId, anomalies);
+    }
+    
+    // Get the most recent remediation timestamp
+    const latestRemediation = cellRemediationEvents.reduce((latest, event) => {
+      return event.timestamp > latest.timestamp ? event : latest;
+    });
+    
+    // Check if there are any anomalies for this cell
+    const cellAnomalies = anomalies.get(cellId);
+    if (!cellAnomalies) {
+      return false;
+    }
+    
+    // Check if the latest anomaly is after the remediation
+    const latestAnomalyDate = new Date(cellAnomalies.latestDate);
+    return latestAnomalyDate > latestRemediation.timestamp;
+  };
+
   const totalTowers = towers.length;
   const activeTowers = towers.filter(tower => tower.status === "up").length;
-  const towersWithAnomalies = towers.filter(tower => anomalies.has(tower.id.toString())).length;
-  const healthyTowers = towers.filter(tower => tower.status === "up" && !anomalies.has(tower.id.toString())).length;
+  const towersWithAnomalies = towers.filter(tower => hasUnresolvedAnomalies(tower.id.toString())).length;
+  const healthyTowers = towers.filter(tower => tower.status === "up" && !hasUnresolvedAnomalies(tower.id.toString())).length;
   const healthPercentage = totalTowers > 0 ? Math.floor(healthyTowers / totalTowers * 100) : 0;
 
   // Format recovery time in a human-readable way (input is now in seconds)
