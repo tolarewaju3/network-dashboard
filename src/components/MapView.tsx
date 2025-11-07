@@ -199,7 +199,13 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         
         const towerId = tower.id.toString();
         
-        // Check for remediation_verified event first
+        // Check for remediation_executing event (highest priority)
+        const hasRemediationExecuting = remediationEvents.some(
+          event => event.type === 'remediation-executing' && 
+          (event.cellId === towerId || event.towerId.toString() === towerId)
+        );
+        
+        // Check for remediation_verified event
         const hasRemediationVerified = remediationEvents.some(
           event => event.type === 'remediation-verified' && 
           (event.cellId === towerId || event.towerId.toString() === towerId)
@@ -208,7 +214,11 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         // Check if there are new anomalies after remediation
         const hasNewAnomalies = hasAnomaliesAfterRemediation(towerId);
         
-        if (hasRemediationVerified && !hasNewAnomalies) {
+        if (hasRemediationExecuting) {
+          markerColor = '#a855f7'; // Purple for remediation in progress
+          shadowColor = 'rgba(168, 85, 247, 0.8)';
+          shouldBlink = true;
+        } else if (hasRemediationVerified && !hasNewAnomalies) {
           markerColor = '#4ade80'; // Green for successfully remediated
           shadowColor = 'rgba(74, 222, 128, 0.6)';
         } else if (hasAnomaly(towerId, anomalies)) {
@@ -217,7 +227,6 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         } else if (tower.status === 'down') {
           markerColor = '#f87171'; // Red for down status
           shadowColor = 'rgba(248, 113, 113, 0.6)';
-          shouldBlink = true; // Blink when tower is down
         } else if (tower.dropRate && tower.dropRate >= 2) {
           markerColor = '#facc15'; // Yellow for high drop rate but not down
           shadowColor = 'rgba(250, 204, 21, 0.6)';
@@ -244,9 +253,9 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         el.style.border = '2px solid white';
         el.style.cursor = 'pointer';
         
-        // Add blinking animation for down towers
+        // Add blinking animation for remediation in progress
         if (shouldBlink) {
-          el.style.animation = 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite';
+          el.style.animation = 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite';
         }
 
         // Create popup with tower information using inline styles instead of Tailwind classes
