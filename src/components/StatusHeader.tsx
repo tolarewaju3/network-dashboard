@@ -2,7 +2,6 @@ import { Tower, Event } from "../types/network";
 import { Progress } from "@/components/ui/progress";
 import { ThemeToggle } from "./ThemeToggle";
 import { hasAnomaly } from "../services/anomalyService";
-
 interface ProcessedAnomaly {
   cellId: string;
   count: number;
@@ -25,32 +24,27 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
   // Helper function to check if there are anomalies after the most recent remediation
   const hasUnresolvedAnomalies = (cellId: string): boolean => {
     // Find the most recent remediation_verified event for this cell
-    const cellRemediationEvents = remediationEvents.filter(
-      event => event.type === 'remediation-verified' && 
-      (event.cellId === cellId || event.towerId.toString() === cellId)
-    );
-    
+    const cellRemediationEvents = remediationEvents.filter(event => event.type === 'remediation-verified' && (event.cellId === cellId || event.towerId.toString() === cellId));
     if (cellRemediationEvents.length === 0) {
       // No remediation, so any anomaly counts as unresolved
       return hasAnomaly(cellId, anomalies);
     }
-    
+
     // Get the most recent remediation timestamp
     const latestRemediation = cellRemediationEvents.reduce((latest, event) => {
       return event.timestamp > latest.timestamp ? event : latest;
     });
-    
+
     // Check if there are any anomalies for this cell
     const cellAnomalies = anomalies.get(cellId);
     if (!cellAnomalies) {
       return false;
     }
-    
+
     // Check if the latest anomaly is after the remediation
     const latestAnomalyDate = new Date(cellAnomalies.latestDate);
     return latestAnomalyDate > latestRemediation.timestamp;
   };
-
   const totalTowers = towers.length;
   const activeTowers = towers.filter(tower => tower.status === "up").length;
   const towersWithAnomalies = towers.filter(tower => hasUnresolvedAnomalies(tower.id.toString())).length;
@@ -82,7 +76,7 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
   return <header className="bg-card/50 border-b border-border py-4 backdrop-blur-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-foreground drop-shadow-lg">Network Dashboard</h1>
+          <h1 className="text-2xl font-bold text-foreground drop-shadow-lg">AI RAN Dashboard</h1>
           <ThemeToggle />
         </div>
         
