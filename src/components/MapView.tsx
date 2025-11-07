@@ -195,6 +195,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         // Determine marker color based on tower status, anomalies, and dropped calls
         let markerColor = '#4ade80'; // Default green for up status
         let shadowColor = 'rgba(74, 222, 128, 0.6)';
+        let shouldBlink = false;
         
         const towerId = tower.id.toString();
         
@@ -213,6 +214,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         } else if (hasAnomaly(towerId, anomalies)) {
           markerColor = '#f87171'; // Red for anomalies (including new ones after remediation)
           shadowColor = 'rgba(248, 113, 113, 0.6)';
+          shouldBlink = true; // Blink for unresolved anomalies
         } else if (tower.status === 'down') {
           markerColor = '#f87171'; // Red for down status
           shadowColor = 'rgba(248, 113, 113, 0.6)';
@@ -241,6 +243,11 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         el.style.boxShadow = `0 0 10px 3px ${shadowColor}`;
         el.style.border = '2px solid white';
         el.style.cursor = 'pointer';
+        
+        // Add blinking animation if needed
+        if (shouldBlink) {
+          el.style.animation = 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite';
+        }
 
         // Create popup with tower information using inline styles instead of Tailwind classes
         const bandsHtml = tower.bands && tower.bands.length > 0 ? 
