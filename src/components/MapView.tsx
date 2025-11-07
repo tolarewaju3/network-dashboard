@@ -17,6 +17,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: number]: mapboxgl.Marker }>({});
+  const markerStatesRef = useRef<{ [key: number]: { color: string; shouldBlink: boolean; shadowColor: string } }>({});
   const { anomalies } = useAnomalies();
   const { theme, resolvedTheme } = useTheme();
 
@@ -223,17 +224,41 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
           shadowColor = 'rgba(250, 204, 21, 0.6)';
         }
 
-        // Check if we need to update or create a new marker
-        if (markersRef.current[tower.id]) {
-          // Update existing marker position
-          markersRef.current[tower.id].setLngLat([tower.lng, tower.lat]);
+        // Check if marker already exists
+        const existingMarker = markersRef.current[tower.id];
+        const existingState = markerStatesRef.current[tower.id];
+        
+        if (existingMarker) {
+          // Update position if needed
+          existingMarker.setLngLat([tower.lng, tower.lat]);
           
-          // We'll remove and recreate the marker element to update its appearance
-          // This ensures that color changes are reflected
-          markersRef.current[tower.id].remove();
+          // Check if visual state has changed
+          const stateChanged = !existingState || 
+            existingState.color !== markerColor || 
+            existingState.shouldBlink !== shouldBlink ||
+            existingState.shadowColor !== shadowColor;
+          
+          if (stateChanged) {
+            // Update marker element's visual properties without removing the marker
+            const markerElement = existingMarker.getElement();
+            markerElement.style.backgroundColor = markerColor;
+            markerElement.style.boxShadow = `0 0 10px 3px ${shadowColor}`;
+            
+            if (shouldBlink) {
+              markerElement.style.animation = 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite';
+            } else {
+              markerElement.style.animation = '';
+            }
+            
+            // Update stored state
+            markerStatesRef.current[tower.id] = { color: markerColor, shouldBlink, shadowColor };
+          }
+          
+          // Marker already exists, no need to recreate
+          return;
         }
 
-        // Create custom marker element
+        // Create new marker if it doesn't exist
         const el = document.createElement('div');
         el.className = 'tower-marker';
         el.style.width = '24px';
@@ -299,8 +324,9 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
           .setPopup(popup)
           .addTo(map.current!);
 
-        // Store marker reference
+        // Store marker reference and state
         markersRef.current[tower.id] = marker;
+        markerStatesRef.current[tower.id] = { color: markerColor, shouldBlink, shadowColor };
       });
     };
 
