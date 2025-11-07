@@ -195,6 +195,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         // Determine marker color based on tower status, anomalies, and dropped calls
         let markerColor = '#4ade80'; // Default green for up status
         let shadowColor = 'rgba(74, 222, 128, 0.6)';
+        let shouldBlink = false;
         
         const towerId = tower.id.toString();
         
@@ -216,6 +217,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         } else if (tower.status === 'down') {
           markerColor = '#f87171'; // Red for down status
           shadowColor = 'rgba(248, 113, 113, 0.6)';
+          shouldBlink = true; // Blink when tower is down
         } else if (tower.dropRate && tower.dropRate >= 2) {
           markerColor = '#facc15'; // Yellow for high drop rate but not down
           shadowColor = 'rgba(250, 204, 21, 0.6)';
@@ -241,6 +243,11 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         el.style.boxShadow = `0 0 10px 3px ${shadowColor}`;
         el.style.border = '2px solid white';
         el.style.cursor = 'pointer';
+        
+        // Add blinking animation for down towers
+        if (shouldBlink) {
+          el.style.animation = 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite';
+        }
 
         // Create popup with tower information using inline styles instead of Tailwind classes
         const bandsHtml = tower.bands && tower.bands.length > 0 ? 
