@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import MapView from "../components/MapView";
+import { useState, useRef, useEffect } from "react";
+import MapView, { MapViewRef } from "../components/MapView";
 import LiveFeed from "../components/LiveFeed";
 import StatusHeader from "../components/StatusHeader";
 import RanChatBox from "../components/RanChatBox";
@@ -13,6 +13,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleAlert } from "lucide-react";
 
 const Index = () => {
+  const mapRef = useRef<MapViewRef>(null);
+  const previousAnomalyCountRef = useRef(0);
+
   // Use our custom hooks to fetch data
   const { towers, callEvents, avgRecoveryTime, isLoading: callsLoading, isError: callsError } = useCallRecords();
   const { events: remediationEvents, isLoading: remediationLoading, isError: remediationError } = useRemediationEvents();
@@ -23,6 +26,20 @@ const Index = () => {
   const allEvents = [...callEvents, ...remediationEvents, ...anomalyEvents].sort((a, b) => 
     b.timestamp.getTime() - a.timestamp.getTime()
   );
+
+  // Auto-zoom to new anomalies when they're detected
+  useEffect(() => {
+    if (anomalyEvents.length > previousAnomalyCountRef.current && anomalyEvents.length > 0) {
+      // New anomaly detected - get the most recent one
+      const latestAnomaly = anomalyEvents[0];
+      const towerId = latestAnomaly.cellId || latestAnomaly.towerId?.toString();
+      
+      if (towerId && mapRef.current) {
+        mapRef.current.flyToTower(towerId);
+      }
+    }
+    previousAnomalyCountRef.current = anomalyEvents.length;
+  }, [anomalyEvents]);
 
   // Hardcoded Mapbox token - replace with your actual token
   const mapboxToken = "pk.eyJ1IjoidG9sYXJld2EiLCJhIjoiY21hYmd6d3c5MmRqOTJpbzlzbXo5amZrMCJ9.WH8s7dEAXdTf_u08Clikig";
@@ -61,7 +78,7 @@ const Index = () => {
         <main className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 h-[500px] overflow-hidden rounded-lg glass-glow relative">
-              <MapView towers={towers} mapboxToken={mapboxToken} remediationEvents={remediationEvents} />
+              <MapView ref={mapRef} towers={towers} mapboxToken={mapboxToken} remediationEvents={remediationEvents} />
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center glass-dark rounded-lg">
                   <div className="text-center">

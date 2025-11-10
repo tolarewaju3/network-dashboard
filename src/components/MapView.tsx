@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Tower, Event } from '../types/network';
@@ -13,13 +13,38 @@ interface MapViewProps {
   remediationEvents: Event[];
 }
 
-const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvents }) => {
+export interface MapViewRef {
+  flyToTower: (towerId: string | number) => void;
+}
+
+const MapView = forwardRef<MapViewRef, MapViewProps>(({ towers, mapboxToken, remediationEvents }, ref) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: number]: mapboxgl.Marker }>({});
   const markerStatesRef = useRef<{ [key: number]: { color: string; shouldBlink: boolean; shadowColor: string } }>({});
   const { anomalies } = useAnomalies();
   const { theme, resolvedTheme } = useTheme();
+
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    flyToTower: (towerId: string | number) => {
+      const tower = towers.find(t => t.id.toString() === towerId.toString());
+      if (tower && map.current) {
+        map.current.flyTo({
+          center: [tower.lng, tower.lat],
+          zoom: 14,
+          duration: 2000,
+          essential: true
+        });
+        
+        // Open the popup for this tower
+        const marker = markersRef.current[tower.id];
+        if (marker) {
+          marker.togglePopup();
+        }
+      }
+    }
+  }), [towers]);
 
   // Calculate bounds from towers data
   const calculateTowerBounds = (towers: Tower[]) => {
@@ -343,6 +368,8 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
       <div ref={mapContainer} className="absolute inset-0" />
     </div>
   );
-};
+});
+
+MapView.displayName = 'MapView';
 
 export default MapView;
