@@ -17,7 +17,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: number]: mapboxgl.Marker }>({});
-  const markerStatesRef = useRef<{ [key: number]: { color: string; shouldBlink: boolean; shadowColor: string; isAnomaly: boolean } }>({});
+  const markerStatesRef = useRef<{ [key: number]: { color: string; shouldBlink: boolean; shadowColor: string } }>({});
   const { anomalies } = useAnomalies();
   const { theme, resolvedTheme } = useTheme();
 
@@ -224,10 +224,6 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
           shadowColor = 'rgba(250, 204, 21, 0.6)';
         }
 
-        // Determine if this is an anomaly marker
-        const isAnomalyMarker = hasAnomaly(towerId, anomalies) && 
-          (tower.status !== 'down' || hasNewAnomalies);
-        
         // Check if marker already exists
         const existingMarker = markersRef.current[tower.id];
         const existingState = markerStatesRef.current[tower.id];
@@ -240,29 +236,13 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
           const stateChanged = !existingState || 
             existingState.color !== markerColor || 
             existingState.shouldBlink !== shouldBlink ||
-            existingState.shadowColor !== shadowColor ||
-            existingState.isAnomaly !== isAnomalyMarker;
+            existingState.shadowColor !== shadowColor;
           
           if (stateChanged) {
             // Update marker element's visual properties without removing the marker
             const markerElement = existingMarker.getElement();
             markerElement.style.backgroundColor = markerColor;
-            markerElement.style.transition = 'all 0.3s ease';
-            
-            // Apply elevation styles for anomaly markers
-            if (isAnomalyMarker) {
-              markerElement.style.width = '30px';
-              markerElement.style.height = '30px';
-              markerElement.style.transform = 'scale(1.2)';
-              markerElement.style.zIndex = '1000';
-              markerElement.style.boxShadow = `0 0 15px 5px ${shadowColor}`;
-            } else {
-              markerElement.style.width = '24px';
-              markerElement.style.height = '24px';
-              markerElement.style.transform = 'scale(1)';
-              markerElement.style.zIndex = '1';
-              markerElement.style.boxShadow = `0 0 10px 3px ${shadowColor}`;
-            }
+            markerElement.style.boxShadow = `0 0 10px 3px ${shadowColor}`;
             
             if (shouldBlink) {
               markerElement.style.animation = 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite';
@@ -271,7 +251,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
             }
             
             // Update stored state
-            markerStatesRef.current[tower.id] = { color: markerColor, shouldBlink, shadowColor, isAnomaly: isAnomalyMarker };
+            markerStatesRef.current[tower.id] = { color: markerColor, shouldBlink, shadowColor };
           }
           
           // Marker already exists, no need to recreate
@@ -281,26 +261,13 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
         // Create new marker if it doesn't exist
         const el = document.createElement('div');
         el.className = 'tower-marker';
+        el.style.width = '24px';
+        el.style.height = '24px';
         el.style.borderRadius = '50%';
         el.style.backgroundColor = markerColor;
-        el.style.border = '2px solid rgba(255, 255, 255, 0.3)';
+        el.style.boxShadow = `0 0 10px 3px ${shadowColor}`;
+        el.style.border = '2px solid white';
         el.style.cursor = 'pointer';
-        el.style.transition = 'all 0.3s ease';
-        
-        // Apply elevation styles for anomaly markers
-        if (isAnomalyMarker) {
-          el.style.width = '30px';
-          el.style.height = '30px';
-          el.style.transform = 'scale(1.2)';
-          el.style.zIndex = '1000';
-          el.style.boxShadow = `0 0 15px 5px ${shadowColor}`;
-        } else {
-          el.style.width = '24px';
-          el.style.height = '24px';
-          el.style.transform = 'scale(1)';
-          el.style.zIndex = '1';
-          el.style.boxShadow = `0 0 10px 3px ${shadowColor}`;
-        }
         
         // Add blinking animation if needed
         if (shouldBlink) {
@@ -359,7 +326,7 @@ const MapView: React.FC<MapViewProps> = ({ towers, mapboxToken, remediationEvent
 
         // Store marker reference and state
         markersRef.current[tower.id] = marker;
-        markerStatesRef.current[tower.id] = { color: markerColor, shouldBlink, shadowColor, isAnomaly: isAnomalyMarker };
+        markerStatesRef.current[tower.id] = { color: markerColor, shouldBlink, shadowColor };
       });
     };
 
