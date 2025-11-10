@@ -1,6 +1,7 @@
 import { Tower, Event } from "../types/network";
 import { Progress } from "@/components/ui/progress";
 import { ThemeToggle } from "./ThemeToggle";
+import { AutoZoomToggle } from "./AutoZoomToggle";
 import { hasAnomaly } from "../services/anomalyService";
 interface ProcessedAnomaly {
   cellId: string;
@@ -14,12 +15,16 @@ interface StatusHeaderProps {
   avgRecoveryTime: number;
   anomalies: Map<string, ProcessedAnomaly>;
   remediationEvents: Event[];
+  autoZoomEnabled: boolean;
+  onAutoZoomToggle: (enabled: boolean) => void;
 }
 const StatusHeader: React.FC<StatusHeaderProps> = ({
   towers,
   avgRecoveryTime,
   anomalies,
-  remediationEvents
+  remediationEvents,
+  autoZoomEnabled,
+  onAutoZoomToggle
 }) => {
   // Helper function to check if there are anomalies after the most recent remediation
   const hasUnresolvedAnomalies = (cellId: string): boolean => {
@@ -76,8 +81,11 @@ const StatusHeader: React.FC<StatusHeaderProps> = ({
   return <header className="bg-card/50 border-b border-border py-4 backdrop-blur-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-foreground drop-shadow-lg">AI RAN Dashboard</h1>
-          <ThemeToggle />
+          <h1 className="text-2xl font-bold text-foreground drop-shadow-lg">AI RAN Dashboard</h1>
+          <div className="flex items-center gap-2">
+            <AutoZoomToggle autoZoomEnabled={autoZoomEnabled} onToggle={onAutoZoomToggle} />
+            <ThemeToggle />
+          </div>
         </div>
         
         <div className="flex flex-wrap gap-6">

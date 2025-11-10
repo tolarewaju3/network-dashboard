@@ -15,6 +15,7 @@ import { CircleAlert } from "lucide-react";
 const Index = () => {
   const mapRef = useRef<MapViewRef>(null);
   const previousAnomalyCountRef = useRef(0);
+  const [autoZoomEnabled, setAutoZoomEnabled] = useState(true);
 
   // Use our custom hooks to fetch data
   const { towers, callEvents, avgRecoveryTime, isLoading: callsLoading, isError: callsError } = useCallRecords();
@@ -29,7 +30,7 @@ const Index = () => {
 
   // Auto-zoom to new anomalies when they're detected
   useEffect(() => {
-    if (anomalyEvents.length > previousAnomalyCountRef.current && anomalyEvents.length > 0) {
+    if (autoZoomEnabled && anomalyEvents.length > previousAnomalyCountRef.current && anomalyEvents.length > 0) {
       // New anomaly detected - get the most recent one
       const latestAnomaly = anomalyEvents[0];
       const towerId = latestAnomaly.cellId || latestAnomaly.towerId?.toString();
@@ -39,7 +40,7 @@ const Index = () => {
       }
     }
     previousAnomalyCountRef.current = anomalyEvents.length;
-  }, [anomalyEvents]);
+  }, [anomalyEvents, autoZoomEnabled]);
 
   // Hardcoded Mapbox token - replace with your actual token
   const mapboxToken = "pk.eyJ1IjoidG9sYXJld2EiLCJhIjoiY21hYmd6d3c5MmRqOTJpbzlzbXo5amZrMCJ9.WH8s7dEAXdTf_u08Clikig";
@@ -72,7 +73,14 @@ const Index = () => {
       
       <div className="relative z-10">
         <div className="px-4 py-2">
-          <StatusHeader towers={towers} avgRecoveryTime={avgRecoveryTime} anomalies={anomalies} remediationEvents={remediationEvents} />
+          <StatusHeader 
+            towers={towers} 
+            avgRecoveryTime={avgRecoveryTime} 
+            anomalies={anomalies} 
+            remediationEvents={remediationEvents}
+            autoZoomEnabled={autoZoomEnabled}
+            onAutoZoomToggle={setAutoZoomEnabled}
+          />
         </div>
         
         <main className="container mx-auto px-4 py-6">

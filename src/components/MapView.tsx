@@ -33,7 +33,7 @@ const MapView = forwardRef<MapViewRef, MapViewProps>(({ towers, mapboxToken, rem
         map.current.flyTo({
           center: [tower.lng, tower.lat],
           zoom: 14,
-          duration: 2000,
+          duration: 3000,
           essential: true
         });
         
